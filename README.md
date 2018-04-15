@@ -46,7 +46,7 @@ The simplest implementation from of OData client.
         }
     };
 
-    var responses = await odata.BatchAsync(request);
+    var responses = await odata.BatchAsync(batch);
 
     if (responses.All(res => res.Success)) 
     {

@@ -79,7 +79,7 @@ var batch = new BatchRequest($"{endpoint}/$batch")
     }
 };
 
-var responses = await odata.BatchAsync(request);
+var responses = await odata.BatchAsync(batch);
 
 if (responses.All(res =&gt; res.Success)) 
 {
