@@ -18,7 +18,7 @@ The simplest implementation from of OData client.
 
     var client = new HttpClient();
     var odata = new ODataClient(client);
-    var reqest = Request.Get($"{endpoint}/Products?$inlinecount=allpages);
+    var reqest = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
     var response = await odata.SendAsync(request);
 
     if (response.Success) 
@@ -61,7 +61,7 @@ Default OData element type is not contains in payload. If you want add element t
 ### Change OData Element Type Key
 Default OData element type key is `odata.type`. If you want change key to other, you should use `typeKey` parameter of Request factory method.
 
-    Request.Post("...", payload, type: "<OData Element Type>", typeKey: "@odata.type")
+    Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")
 
 ## Credential
 
