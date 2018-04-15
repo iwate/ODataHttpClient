@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.0</Version>
+    <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
+    <PackageId>ODataHttpClient</PackageId>
+    <Authors>iwate</Authors>
+    <Copyright>iwate</Copyright>
+    <Description>The simplest implementation from of OData client.</Description>
+    <PackageLicenseUrl>https://github.com/iwate/ODataHttpClient/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://iwate.github.io/ODataHttpClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>
