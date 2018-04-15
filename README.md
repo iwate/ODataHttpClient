@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/iwate/ODataHttpClient/tree/master.svg?style=svg)](https://circleci.com/gh/iwate/ODataHttpClient/tree/master)
+
 The simplest implementation from of OData client.
 
 ## Install
