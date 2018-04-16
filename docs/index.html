@@ -126,6 +126,30 @@ if (responses.All(res =&gt; res.Success))
 
 <pre><code>var odata = new ODataClient(client, new CustomCredentialBuilder());
 </code></pre>
+<h2 id="jsonserializersettings">Json Serializer Settings</h2>
+
+<p>In default, ODataHttpClient use <a href="http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes">OData V2 JSON Serialization Format</a>. <br />
+If you change general json format, can select a way of three.</p>
+
+<h3 id="1globallevelsettings">1. Global level settings</h3>
+
+<pre><code>ODataHttpClient.Serializers.JsonSerializer.DefaultJsonSerializerSettings 
+            = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings; // new Newtonsoft.Json.JsonSerializerSettings();
+</code></pre>
+
+<h3 id="2instancelevelsettings">2. Instance level settings</h3>
+
+<pre><code>var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings);
+var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory
+</code></pre>
+
+<h3 id="3requestlevelsettings">3. Request level settings</h3>
+
+<pre><code>var settings = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings;
+var request = Request.Get("...", settings); // pass settings
+var response = await odata.SendAsync(request);
+var data = response.ReadAs&lt;dynamic&gt;(settings); // pass settings
+</code></pre>
     </main>
 </body>
 </html>
