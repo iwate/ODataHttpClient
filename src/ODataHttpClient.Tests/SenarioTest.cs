@@ -64,7 +64,7 @@ namespace ODataHttpClient.Tests
         {
             var batch = new BatchRequest($"{endpoint}/$batch")
             {
-                Requests = new []
+                Requests =
                 {
                     Request.Post($"{endpoint}/Products", new 
                     { 

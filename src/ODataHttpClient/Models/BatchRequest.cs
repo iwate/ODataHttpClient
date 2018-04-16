@@ -9,11 +9,12 @@ namespace ODataHttpClient.Models
     public class BatchRequest : IRequest
     {
         public string Uri { get; }
+        public ICollection<Request> Requests { get; set; } 
         public BatchRequest(string uri)
         {
             Uri = uri;
+            Requests = new List<Request>();
         }
-        public IEnumerable<Request> Requests { get; set; }
 
         protected HttpContent CreateContent()
         {

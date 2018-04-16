@@ -12,6 +12,8 @@
     <PackageProjectUrl>https://iwate.github.io/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <PackageReleaseNotes>
++ v1.2.1
+  - Support request addition to batch request instance.
 + v1.2.0
   - Support binary type (byte[], Stream) in `ReadAs`
 + v1.1.0

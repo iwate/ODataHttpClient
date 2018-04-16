@@ -80,7 +80,7 @@ namespace ODataHttpClient.Tests
         {
             var message = new BatchRequest(batchUri)
             {
-                Requests = new[]
+                Requests =
                 {
                     Request.Post(uri, new {}),
                     Request.Post(uri, new {})
