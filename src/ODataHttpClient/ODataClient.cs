@@ -38,7 +38,7 @@ namespace ODataHttpClient
         protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content)
         {
             var code = (int)status;
-            var body = content != null ? await content.ReadAsStringAsync() : null;
+            var body = content != null ? await content.ReadAsByteArrayAsync() : null;
             var mime = content?.Headers.ContentType?.MediaType;
             
             if (code >= 400 && code != 404)

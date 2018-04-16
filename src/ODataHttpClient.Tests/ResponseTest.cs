@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using ODataHttpClient.Models;
 using ODataHttpClient.Serializers;
@@ -43,7 +44,7 @@ namespace ODataHttpClient.Tests
         [Fact]
         public void ReadTextAsNullString()
         {
-            var response = Response.CreateSuccess(HttpStatusCode.NotFound, "text/plain", null);
+            var response = Response.CreateSuccess(HttpStatusCode.NotFound, "text/plain", (string)null);
 
             Assert.Null(response.ReadAs<string>());
         }
@@ -97,6 +98,28 @@ namespace ODataHttpClient.Tests
             Assert.Equal(new DateTimeOffset(2018,1,1,0,0,0,0, TimeSpan.FromHours(9)), jst.ReadAs<DateTimeOffset?>());
             Assert.Equal(new DateTimeOffset(2018,1,1,0,0,0,0, TimeSpan.FromHours(0)), utc.ReadAs<DateTimeOffset>());
             Assert.Equal(new DateTimeOffset(2018,1,1,0,0,0,0, TimeSpan.FromHours(0)), utc.ReadAs<DateTimeOffset?>());
+        }
+        [Fact]
+        public void ReadBinaryAsByteArray()
+        {
+            var binary = new byte[] { 0, 1, 2, 3, 4 };
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/octet-stream", binary);
+            Assert.True(BitConverter.Equals(binary, response.ReadAs<byte[]>()));
+        }
+        [Fact]
+        public void ReadBinaryAsStream()
+        {
+            var binary = new byte[] { 0, 1, 2, 3, 4 };
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/octet-stream", binary);
+            using (var stream = response.ReadAs<Stream>())
+            {
+                Assert.Equal(0, stream.ReadByte());
+                Assert.Equal(1, stream.ReadByte());
+                Assert.Equal(2, stream.ReadByte());
+                Assert.Equal(3, stream.ReadByte());
+                Assert.Equal(4, stream.ReadByte());
+            }
+               
         }
     }
 }
