@@ -7,17 +7,17 @@ namespace ODataHttpClient.Models
 {
     public class Response
     {
+        private JsonSettings _jsonSettings;
         public bool Success { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
         public string MediaType { get; private set; }
         public string ErrorMessage { get; private set; }
         public string Body { get; private set; }
-
         private Response(){}
 
         public T ReadAs<T>(string jsonPath = null)
         {
-            return ReadAs<T>(jsonPath, JsonSerializer.DefaultJsonSerializerSettings);
+            return ReadAs<T>(jsonPath, _jsonSettings);
         }
         public T ReadAs<T>(JsonSettings jsonSettings)
         {
@@ -68,7 +68,11 @@ namespace ODataHttpClient.Models
         }
         public static Response CreateSuccess(HttpStatusCode code, string mime,  string body)
         {
-            return new Response{ Success = true, StatusCode = code, MediaType = mime, Body = body };
+            return CreateSuccess(code, mime, body, JsonSerializer.DefaultJsonSerializerSettings);
+        }
+        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, JsonSettings jsonSettings)
+        {
+            return new Response { Success = true, StatusCode = code, MediaType = mime, Body = body, _jsonSettings = jsonSettings };
         }
     }
 }

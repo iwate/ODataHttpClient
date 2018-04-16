@@ -10,7 +10,7 @@ namespace ODataHttpClient.Models
 {
     public class Request : IRequest
     {
-        private const string DEFAULT_TYPE_KEY = "odata.type";
+        internal const string DEFAULT_TYPE_KEY = "odata.type";
         private static readonly Func<string, string, Action<JToken>> _setOdataType = (key, val) => token => { if (val != null) token[key] = val; };
         public HttpMethod Method { get; private set; }
         public string Uri { get; private set; }
