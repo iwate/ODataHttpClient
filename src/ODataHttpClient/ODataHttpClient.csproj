@@ -12,10 +12,11 @@
     <PackageProjectUrl>https://iwate.github.io/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <PackageReleaseNotes>
-      + v1.1.0
-        - Request level json serialize settings
-        - Instance level json serialize settings
-      + v1.0.0 First release
++ v1.1.0
+  - Request level json serialize settings
+  - Instance level json serialize settings
++ v1.0.0
+  - First release
     </PackageReleaseNotes>
   </PropertyGroup>
 
