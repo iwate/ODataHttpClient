@@ -6,7 +6,7 @@ namespace ODataHttpClient.Serializers
 {
     public class JsonSerializer
     {
-        public static JsonSerializerSettings V2JsonSerializerSettings = new JsonSerializerSettings
+        public static JsonSerializerSettings HistoricalJsonSerializerSettings = new JsonSerializerSettings
         {
             Converters = 
             {
@@ -19,7 +19,7 @@ namespace ODataHttpClient.Serializers
             }
         };
         public static JsonSerializerSettings GeneralJsonSerializerSettings = new JsonSerializerSettings();
-        public static JsonSerializerSettings DefaultJsonSerializerSettings = V2JsonSerializerSettings;
+        public static JsonSerializerSettings DefaultJsonSerializerSettings = HistoricalJsonSerializerSettings;
 
         public static string Serialize<T>(T obj)
         {
