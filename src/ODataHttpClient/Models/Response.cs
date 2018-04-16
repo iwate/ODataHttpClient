@@ -1,9 +1,7 @@
 using ODataHttpClient.Serializers;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
+using JsonSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace ODataHttpClient.Models
 {
@@ -19,16 +17,24 @@ namespace ODataHttpClient.Models
 
         public T ReadAs<T>(string jsonPath = null)
         {
+            return ReadAs<T>(jsonPath, JsonSerializer.DefaultJsonSerializerSettings);
+        }
+        public T ReadAs<T>(JsonSettings jsonSettings)
+        {
+            return ReadAs<T>(null, jsonSettings);
+        }
+        public T ReadAs<T>(string jsonPath, JsonSettings jsonSettings)
+        {
             if (Body == null)
                 return default(T);
 
             if (MediaType == "application/json")
             {
                 if (jsonPath == null)
-                    return JsonSerializer.Deserialize<T>(Body);
+                    return JsonSerializer.Deserialize<T>(Body, jsonSettings);
 
                 else
-                    return JsonSerializer.DeserializeAt<T>(Body, jsonPath);
+                    return JsonSerializer.DeserializeAt<T>(Body, jsonPath, jsonSettings);
             }
 
             var type = typeof(T);
