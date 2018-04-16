@@ -54,12 +54,12 @@ The simplest implementation from of OData client.
     }
 
 ### Set OData Element Type
-Default OData element type is not contains in payload. If you want add element type, you sould use `type` parameter of Request factory method.
+In default If you want add element type, you sould use `type` parameter of Request factory method.
 
     Request.Post("...", payload, type: "ODataDemo.Product")
 
 ### Change OData Element Type Key
-Default OData element type key is `odata.type`. If you want change key to other, you should use `typeKey` parameter of Request factory method.
+In default OData element type key is `odata.type`. If you want change key to other, you should use `typeKey` parameter of Request factory method.
 
     Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")
 
