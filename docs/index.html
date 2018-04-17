@@ -29,7 +29,6 @@
     <main class="markdown">
 <h1>ODataHttpClient</h1>
 <p>The simplest implementation from of OData client.</p>
-<p><a href="https://github.com/iwate/ODataHttpClient">View repository</a></p>
 
 <h2 id="install">Install</h2>
 
@@ -90,16 +89,16 @@ if (responses.All(res =&gt; res.Success))
 
 <h3 id="setodataelementtype">Set OData Element Type</h3>
 
-<p>Default OData element type is not contains in payload. If you want add element type, you sould use <code>type</code> parameter of Request factory method.</p>
+<p>In default, OData element type is not contains in payload. If you want add element type, you sould use <code>type</code> parameter of Request factory method.</p>
 
 <pre><code>Request.Post("...", payload, type: "ODataDemo.Product")
 </code></pre>
 
 <h3 id="changeodataelementtypekey">Change OData Element Type Key</h3>
 
-<p>Default OData element type key is <code>odata.type</code>. If you want change key to other, you should use <code>typeKey</code> parameter of Request factory method.</p>
+<p>In default, OData element type key is <code>odata.type</code>. If you want change key to other, you should use <code>typeKey</code> parameter of Request factory method.</p>
 
-<pre><code>Request.Post("...", payload, type: "&lt;OData Element Type&gt;", typeKey: "@odata.type")
+<pre><code>Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")
 </code></pre>
 
 <h2 id="credential">Credential</h2>
@@ -126,6 +125,7 @@ if (responses.All(res =&gt; res.Success))
 
 <pre><code>var odata = new ODataClient(client, new CustomCredentialBuilder());
 </code></pre>
+
 <h2 id="jsonserializersettings">Json Serializer Settings</h2>
 
 <p>In default, ODataHttpClient use <a href="http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes">OData V2 JSON Serialization Format</a>. <br />
