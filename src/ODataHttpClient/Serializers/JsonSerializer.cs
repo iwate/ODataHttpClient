@@ -16,9 +16,16 @@ namespace ODataHttpClient.Serializers
                 new TypeToStringConverter<double?>(),
                 new TypeToStringConverter<decimal>(),
                 new TypeToStringConverter<decimal?>(),
+                new ByteArrayConverter(),
             }
         };
-        public static JsonSerializerSettings GeneralJsonSerializerSettings = new JsonSerializerSettings();
+        public static JsonSerializerSettings GeneralJsonSerializerSettings = new JsonSerializerSettings
+        {
+            Converters =
+            {
+                new ByteArrayConverter(),
+            }
+        };
         public static JsonSerializerSettings DefaultJsonSerializerSettings = HistoricalJsonSerializerSettings;
 
         public static string Serialize<T>(T obj)
