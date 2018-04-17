@@ -1,24 +1,25 @@
 ﻿using Newtonsoft.Json.Linq;
 using ODataHttpClient.Serializers;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
-using JsonSettings = Newtonsoft.Json.JsonSerializerSettings;
+
 namespace ODataHttpClient.Models
 {
     public class RequestFactory
     {
-        public JsonSettings JsonSerializerSettings { get; set; }
+        public IJsonSerializer JsonSerializer { get; set; }
         public RequestFactory()
-            : this (JsonSerializer.DefaultJsonSerializerSettings)
+            : this (Serializers.JsonSerializer.Default)
         { }
-        public RequestFactory(JsonSettings jsonSettings)
+        public RequestFactory(IJsonSerializer serializer)
         {
-            JsonSerializerSettings = jsonSettings;
+            JsonSerializer = serializer;
         }
-        public Request Create<T>(HttpMethod method, string uri, T body, Action<JToken> builder)
-            => Request.Create<T>(method, uri, body, builder, JsonSerializerSettings);
+        public Request Create<T>(HttpMethod method, string uri, T body, IEnumerable<KeyValuePair<string, object>> additionals)
+            => Request.Create<T>(method, uri, body, additionals, JsonSerializer);
         public Request Create<T>(HttpMethod method, string uri, T body, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY)
-            => Request.Create<T>(method, uri, body, type, typeKey, JsonSerializerSettings);
+            => Request.Create<T>(method, uri, body, type, typeKey, JsonSerializer);
 
         public Request Get(string uri) 
             => Request.Get(uri);
@@ -30,12 +31,12 @@ namespace ODataHttpClient.Models
             => Request.Delete(uri);
 
         public Request Post<T>(string uri, T body, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY) 
-            => Request.Post(uri, body, type, typeKey, JsonSerializerSettings);
+            => Request.Post(uri, body, type, typeKey, JsonSerializer);
 
         public Request Put<T>(string uri, T body, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY) 
-            => Request.Put(uri, body, type, typeKey, JsonSerializerSettings);
+            => Request.Put(uri, body, type, typeKey, JsonSerializer);
 
         public Request Patch<T>(string uri, T body, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY) 
-            => Request.Patch(uri, body, type, typeKey, JsonSerializerSettings);
+            => Request.Patch(uri, body, type, typeKey, JsonSerializer);
     }
 }

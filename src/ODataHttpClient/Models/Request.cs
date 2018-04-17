@@ -1,19 +1,21 @@
 ﻿using Newtonsoft.Json.Linq;
 using ODataHttpClient.Serializers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using JsonSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace ODataHttpClient.Models
 {
     public class Request : IRequest
     {
         internal const string DEFAULT_TYPE_KEY = "odata.type";
-        private static readonly Func<string, string, Action<JToken>> _setOdataType = (key, val) => token => { if (val != null) token[key] = val; };
+        private static Type stringType = typeof(string);
         public HttpMethod Method { get; private set; }
         public string Uri { get; private set; }
+        public string MediaType { get; private set; }
         public string Body { get; private set; }
 
         private Request(){}
@@ -26,8 +28,8 @@ namespace ODataHttpClient.Models
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
             
             if (Body != null)
-                message.Content = new StringContent(Body, Encoding.UTF8, "application/json");
-
+                message.Content = new StringContent(Body, Encoding.UTF8, MediaType);
+            
             return message;
         }
 
@@ -40,22 +42,39 @@ namespace ODataHttpClient.Models
                 Body = null,
             };
         }
-        public static Request Create<T>(HttpMethod method, string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, JsonSettings jsonSettings = null)
+        public static Request Create<T>(HttpMethod method, string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null)
         {
-            return Create(method, uri, body, _setOdataType(typeKey, type), jsonSettings ?? JsonSerializer.DefaultJsonSerializerSettings);
+            return Create(method, uri, body, type != null ? new[] { new KeyValuePair<string, object>(typeKey, type) } : null, serializer ?? JsonSerializer.Default);
         }
 
-        public static Request Create<T>(HttpMethod method, string uri, T body, Action<JToken> builder, JsonSettings jsonSettings)
+        public static Request Create<T>(HttpMethod method, string uri, T body, IEnumerable<KeyValuePair<string, object>> additionals, IJsonSerializer serializer)
         {
-            var token = JToken.FromObject(body);
+            string content, mime = null;
+            
+            var type = typeof(T);
 
-            builder?.Invoke(token);
+            if (type.IsValueType || type == stringType)
+            {
+                content = body.ToString();
+                mime = "text/plain";
+            }
+            else
+            {
+                var json = JObject.FromObject(body);
+
+                foreach (var additional in additionals ?? new KeyValuePair<string, object>[0])
+                    json.Add(additional.Key, JToken.FromObject(additional.Value));
+
+                content = serializer.Serialize(json);
+                mime = "application/json";
+            }
 
             return new Request
             {
                 Method = method,
                 Uri = uri,
-                Body = JsonSerializer.Serialize(token, jsonSettings),
+                MediaType = mime,
+                Body = content,
             };
         }
 
@@ -65,13 +84,13 @@ namespace ODataHttpClient.Models
 
         public static Request Delete(string uri) => Create(HttpMethod.Delete, uri);
 
-        public static Request Post<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, JsonSettings jsonSettings = null) 
-            => Create(HttpMethod.Post, uri, body, type, typeKey, jsonSettings);
+        public static Request Post<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
+            => Create(HttpMethod.Post, uri, body, type, typeKey, serializer);
 
-        public static Request Put<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, JsonSettings jsonSettings = null) 
-            => Create(HttpMethod.Put, uri, body, type, typeKey, jsonSettings);
+        public static Request Put<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
+            => Create(HttpMethod.Put, uri, body, type, typeKey, serializer);
 
-        public static Request Patch<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, JsonSettings jsonSettings = null) 
-            => Create(new HttpMethod("PATCH"), uri, body, type, typeKey, jsonSettings);
+        public static Request Patch<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
+            => Create(new HttpMethod("PATCH"), uri, body, type, typeKey, serializer);
     }
 }

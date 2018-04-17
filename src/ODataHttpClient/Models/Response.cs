@@ -3,13 +3,12 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
-using JsonSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace ODataHttpClient.Models
 {
     public class Response
     {
-        private JsonSettings _jsonSettings;
+        private IJsonSerializer _serializer = JsonSerializer.Default;
         public bool Success { get; private set; }
         public HttpStatusCode StatusCode { get; private set; }
         public string MediaType { get; private set; }
@@ -20,13 +19,13 @@ namespace ODataHttpClient.Models
 
         public T ReadAs<T>(string jsonPath = null)
         {
-            return ReadAs<T>(jsonPath, _jsonSettings);
+            return ReadAs<T>(jsonPath, _serializer);
         }
-        public T ReadAs<T>(JsonSettings jsonSettings)
+        public T ReadAs<T>(IJsonSerializer serializer)
         {
-            return ReadAs<T>(null, jsonSettings);
+            return ReadAs<T>(null, serializer);
         }
-        public T ReadAs<T>(string jsonPath, JsonSettings jsonSettings)
+        public T ReadAs<T>(string jsonPath, IJsonSerializer serializer)
         {
             if (Body == null)
                 return default(T);
@@ -34,10 +33,10 @@ namespace ODataHttpClient.Models
             if (MediaType == "application/json")
             {
                 if (jsonPath == null)
-                    return JsonSerializer.Deserialize<T>(Body, jsonSettings);
+                    return serializer.Deserialize<T>(Body);
 
                 else
-                    return JsonSerializer.DeserializeAt<T>(Body, jsonPath, jsonSettings);
+                    return serializer.Deserialize<T>(Body, jsonPath);
             }
 
             var type = typeof(T);
@@ -89,19 +88,19 @@ namespace ODataHttpClient.Models
 
         public static Response CreateSuccess(HttpStatusCode code, string mime, string body)
         {
-            return CreateSuccess(code, mime, body, JsonSerializer.DefaultJsonSerializerSettings);
+            return CreateSuccess(code, mime, body, JsonSerializer.Default);
         }
         public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body)
         {
-            return CreateSuccess(code, mime, body, JsonSerializer.DefaultJsonSerializerSettings);
+            return CreateSuccess(code, mime, body, JsonSerializer.Default);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, JsonSettings jsonSettings)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, IJsonSerializer serializer)
         {
-            return CreateSuccess(code, mime, body != null ? Encoding.UTF8.GetBytes(body) : null, jsonSettings);
+            return CreateSuccess(code, mime, body != null ? Encoding.UTF8.GetBytes(body) : null, serializer);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, JsonSettings jsonSettings)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, IJsonSerializer serializer)
         {
-            return new Response { Success = true, StatusCode = code, MediaType = mime, Binary = body, _jsonSettings = jsonSettings };
+            return new Response { Success = true, StatusCode = code, MediaType = mime, Binary = body, _serializer = serializer };
         }
     }
 }

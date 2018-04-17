@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using JsonSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace ODataHttpClient
 {
@@ -17,22 +16,22 @@ namespace ODataHttpClient
         private readonly ICredentialBuilder _credentialBuilder;
         public RequestFactory RequestFactory { get; }
         public ODataClient(HttpClient httpClient) 
-            : this(httpClient, JsonSerializer.DefaultJsonSerializerSettings)
+            : this(httpClient, JsonSerializer.Default)
         {}
-        public ODataClient(HttpClient httpClient, JsonSettings jsonSettings)
-            : this(httpClient, null, jsonSettings)
+        public ODataClient(HttpClient httpClient, IJsonSerializer serializer)
+            : this(httpClient, null, serializer)
         {}
         public ODataClient(HttpClient httpClient, string username, string password) 
-            : this(httpClient, username, password, JsonSerializer.DefaultJsonSerializerSettings)
+            : this(httpClient, username, password, JsonSerializer.Default)
         {}
-        public ODataClient(HttpClient httpClient, string username, string password, JsonSettings jsonSettings)
-            : this(httpClient, new BasicAuthCredential(username, password), jsonSettings)
+        public ODataClient(HttpClient httpClient, string username, string password, IJsonSerializer serializer)
+            : this(httpClient, new BasicAuthCredential(username, password), serializer)
         {}
-        public ODataClient(HttpClient httpClient, ICredentialBuilder credentialBuilder, JsonSettings jsonSettings)
+        public ODataClient(HttpClient httpClient, ICredentialBuilder credentialBuilder, IJsonSerializer serializer)
         {
             _httpClient = httpClient;
             _credentialBuilder = credentialBuilder;
-            RequestFactory = new RequestFactory(jsonSettings);
+            RequestFactory = new RequestFactory(serializer);
         }
 
         protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content)

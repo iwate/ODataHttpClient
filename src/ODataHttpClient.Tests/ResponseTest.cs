@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using ODataHttpClient.Models;
 using ODataHttpClient.Serializers;
@@ -12,7 +13,7 @@ namespace ODataHttpClient.Tests
         [Fact]
         public void ReadJsonAsDynamic()
         {
-            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/json", JsonSerializer.Serialize(new { Text = "Hello, World!" }));
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/json", JsonSerializer.Default.Serialize(new { Text = "Hello, World!" }));
             var obj =  response.ReadAs<dynamic>();
             string text = obj.Text;
 
@@ -21,7 +22,7 @@ namespace ODataHttpClient.Tests
         [Fact]
         public void ReadJsonAsWithPath1()
         {
-            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/json", JsonSerializer.Serialize(new { Text = "Hello, World!" }));
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/json", JsonSerializer.Default.Serialize(new { Text = "Hello, World!" }));
             var text =  response.ReadAs<string>("$.Text");
 
             Assert.Equal("Hello, World!", text);
@@ -104,7 +105,7 @@ namespace ODataHttpClient.Tests
         {
             var binary = new byte[] { 0, 1, 2, 3, 4 };
             var response = Response.CreateSuccess(HttpStatusCode.OK, "application/octet-stream", binary);
-            Assert.True(BitConverter.Equals(binary, response.ReadAs<byte[]>()));
+            Assert.True(Enumerable.SequenceEqual(binary, response.ReadAs<byte[]>()));
         }
         [Fact]
         public void ReadBinaryAsStream()

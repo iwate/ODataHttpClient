@@ -16,8 +16,8 @@ namespace ODataHttpClient.Tests
         static ODataClient odata = new ODataClient(httpClient);
         public SenarioTest()
         {
-            ODataHttpClient.Serializers.JsonSerializer.DefaultJsonSerializerSettings 
-                = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings;
+            ODataHttpClient.Serializers.JsonSerializer.Default 
+                = ODataHttpClient.Serializers.JsonSerializer.General;
         }
         [Fact]
         public async Task GetProducts()
