@@ -133,22 +133,21 @@ If you change general json format, can select a way of three.</p>
 
 <h3 id="1globallevelsettings">1. Global level settings</h3>
 
-<pre><code>ODataHttpClient.Serializers.JsonSerializer.DefaultJsonSerializerSettings 
-            = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings; // new Newtonsoft.Json.JsonSerializerSettings();
+<pre><code>ODataHttpClient.Serializers.JsonSerializer.Default =  = ODataHttpClient.Serializers.JsonSerializer.General
 </code></pre>
 
 <h3 id="2instancelevelsettings">2. Instance level settings</h3>
 
-<pre><code>var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings);
+<pre><code>var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.General);
 var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory
 </code></pre>
 
 <h3 id="3requestlevelsettings">3. Request level settings</h3>
 
-<pre><code>var settings = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings;
-var request = Request.Get("...", settings); // pass settings
+<pre><code>var serializer = ODataHttpClient.Serializers.JsonSerializer.General;
+var request = Request.Get("...", serializer); // pass serializer
 var response = await odata.SendAsync(request);
-var data = response.ReadAs&lt;dynamic&gt;(settings); // pass settings
+var data = response.ReadAs&lt;dynamic&gt;(serializer); // pass serializer
 </code></pre>
     </main>
 </body>

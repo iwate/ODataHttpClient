@@ -91,17 +91,16 @@ If you change general json format, can select a way of three.
 
 ### 1. Global level settings
 
-    ODataHttpClient.Serializers.JsonSerializer.DefaultJsonSerializerSettings 
-                = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings; // new Newtonsoft.Json.JsonSerializerSettings();
+    ODataHttpClient.Serializers.JsonSerializer.Default =  = ODataHttpClient.Serializers.JsonSerializer.General
 
 ### 2. Instance level settings
 
-    var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings);
+    var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.General);
     var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory
 
 ### 3. Request level settings
 
-    var settings = ODataHttpClient.Serializers.JsonSerializer.GeneralJsonSerializerSettings;
-    var request = Request.Get("...", settings); // pass settings
+    var serializer = ODataHttpClient.Serializers.JsonSerializer.General;
+    var request = Request.Get("...", serializer); // pass serializer
     var response = await odata.SendAsync(request);
-    var data = response.ReadAs<dynamic>(settings); // pass settings
+    var data = response.ReadAs<dynamic>(serializer); // pass serializer
