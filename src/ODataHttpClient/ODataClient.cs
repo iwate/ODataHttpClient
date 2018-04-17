@@ -1,12 +1,14 @@
 using ODataHttpClient.Credentials;
 using ODataHttpClient.Models;
 using ODataHttpClient.Serializers;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
+[assembly: CLSCompliant(true)]
 namespace ODataHttpClient
 {
     public class ODataClient

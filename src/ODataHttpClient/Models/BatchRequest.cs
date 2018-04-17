@@ -39,11 +39,10 @@ namespace ODataHttpClient.Models
 
         public HttpRequestMessage CreateMessage()
         {
-            var msg = new HttpRequestMessage(HttpMethod.Post, Uri);
-
-            msg.Content = CreateContent();
-
-            return msg;
+            return new HttpRequestMessage(HttpMethod.Post, Uri)
+            {
+                Content = CreateContent()
+            };
         }
     }
 }
