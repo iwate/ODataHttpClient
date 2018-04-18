@@ -91,7 +91,7 @@ If you change general json format, can select a way of three.
 
 ### 1. Global level settings
 
-    ODataHttpClient.Serializers.JsonSerializer.Default =  = ODataHttpClient.Serializers.JsonSerializer.General
+    ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.General;
 
 ### 2. Instance level settings
 
