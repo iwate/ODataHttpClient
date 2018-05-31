@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using ODataHttpClient.Parameterizers;
 using ODataHttpClient.Serializers;
 using System;
 using System.Collections.Generic;
@@ -78,19 +79,33 @@ namespace ODataHttpClient.Models
             };
         }
 
+        public static IParameterizer Parameterizer { get; set; } = new ODataParameterizer();
+        
         public static Request Get(string uri) => Create(HttpMethod.Get, uri);
+        public static Request Get(string uri, object @params) => Get(Parameterizer.Parameterize(uri, @params));
 
         public static Request Head(string uri) => Create(HttpMethod.Head, uri);
+        public static Request Head(string uri, object @params) => Head(Parameterizer.Parameterize(uri, @params));
 
         public static Request Delete(string uri) => Create(HttpMethod.Delete, uri);
+        public static Request Delete(string uri, object @params) => Delete(Parameterizer.Parameterize(uri, @params));
 
         public static Request Post<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
             => Create(HttpMethod.Post, uri, body, type, typeKey, serializer);
+        
+        public static Request Post<T>(string uri, object @params, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
+            => Post(Parameterizer.Parameterize(uri, @params), body, type, typeKey, serializer);
 
         public static Request Put<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
             => Create(HttpMethod.Put, uri, body, type, typeKey, serializer);
+        
+        public static Request Put<T>(string uri, object @params, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
+            => Put(Parameterizer.Parameterize(uri, @params), body, type, typeKey, serializer);
 
         public static Request Patch<T>(string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
             => Create(new HttpMethod("PATCH"), uri, body, type, typeKey, serializer);
+        
+        public static Request Patch<T>(string uri, object @params, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null) 
+            => Patch(Parameterizer.Parameterize(uri, @params), body, type, typeKey, serializer);
     }
 }

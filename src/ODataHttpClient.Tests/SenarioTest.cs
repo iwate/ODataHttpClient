@@ -32,6 +32,18 @@ namespace ODataHttpClient.Tests
             Assert.True(products.Count() > 0);
         }
         [Fact]
+        public async Task GetProduct()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = 1 }));
+
+            Assert.True(response.Success);
+
+            var product = response.ReadAs<dynamic>();
+
+            Assert.NotNull(product);
+            Assert.Equal(1, (int)product.ID);
+        }
+        [Fact]
         public async Task ChangeProductName()
         {
             var searched = await odata.SendAsync(Request.Get($"{endpoint}/Products?$top=1"));
