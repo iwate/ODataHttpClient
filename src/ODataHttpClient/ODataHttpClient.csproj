@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.3.0</Version>
-    <PackageVersion>1.3.0$(VersionSuffix)</PackageVersion>
+    <Version>1.4.0</Version>
+    <PackageVersion>1.4.0$(VersionSuffix)</PackageVersion>
     <PackageId>ODataHttpClient</PackageId>
     <Authors>iwate</Authors>
     <Copyright>iwate</Copyright>
@@ -12,6 +12,8 @@
     <PackageProjectUrl>https://iwate.github.io/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <PackageReleaseNotes>
++ v1.4.0
+  - Support parameterized uri
 + v1.3.0
   - [Breaking Change] Change to clean interface without Newtonsoft.Json interface.
 + v1.2.2

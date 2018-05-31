@@ -53,6 +53,17 @@ The simplest implementation from of OData client.
     {
         var id = response.First().ReadAs<int>("$.Id");
     }
+### Parameterized Uri
+
+    var client = new HttpClient();
+    var odata = new ODataClient(client);
+    var reqest = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTime(2000, 1, 1) });
+    var response = await odata.SendAsync(request);
+
+    if (response.Success) 
+    {
+        ...
+    }
 
 ### Set OData Element Type
 In default, OData element type is not contains in payload. If you want add element type, you sould use `type` parameter of Request factory method.

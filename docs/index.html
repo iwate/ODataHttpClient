@@ -91,6 +91,19 @@ if (responses.All(res =&gt; res.Success))
 }
 </code></pre>
 
+<h3 id="parameterizeduri">Parameterized Uri</h3>
+
+<pre><code>var client = new HttpClient();
+var odata = new ODataClient(client);
+var reqest = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTime(2000, 1, 1) });
+var response = await odata.SendAsync(request);
+
+if (response.Success) 
+{
+    ...
+}
+</code></pre>
+
 <h3 id="setodataelementtype">Set OData Element Type</h3>
 
 <p>In default, OData element type is not contains in payload. If you want add element type, you sould use <code>type</code> parameter of Request factory method.</p>
