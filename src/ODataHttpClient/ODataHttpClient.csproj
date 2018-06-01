@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.4.0</Version>
-    <PackageVersion>1.4.1$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.4.2$(VersionSuffix)</PackageVersion>
     <PackageId>ODataHttpClient</PackageId>
     <Authors>iwate</Authors>
     <Copyright>iwate</Copyright>
@@ -12,6 +12,9 @@
     <PackageProjectUrl>https://iwate.github.io/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <PackageReleaseNotes>
++ v1.4.2
+  - Beautify TimeSpan ISO8601 duration format
+  - Thank you for your contribution: @takepara
 + v1.4.1
   - Remove depndency: System.Xml
 + v1.4.0

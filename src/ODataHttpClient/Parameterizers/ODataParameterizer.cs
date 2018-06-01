@@ -58,7 +58,22 @@ namespace ODataHttpClient.Parameterizers
 
         private string Val(Guid value) => $"guid'{value}'";
 
-        private string Val(TimeSpan value) => $"time'P{value.Days}DT{value.Hours}H{value.Minutes}M{(value.Seconds + (double)value.Milliseconds / 1000)}S'";
+        private string Val(TimeSpan value)
+        {
+            var duration = string.Join("", 
+                new[]{ 
+                    "P", 
+                    $"{value.Days}D", 
+                    "T", 
+                    $"{value.Hours}H", 
+                    $"{value.Minutes}M", 
+                    $"{(value.Seconds + (double)value.Milliseconds / 1000)}S" 
+                }.Where(v => v.Length != 2 || v[0] != '0'));
+                
+	        duration = duration == "PT" ? "PT0S" : duration[duration.Length-1] == 'T' ? duration.Substring(0,duration.Length-1) : duration;
+
+            return $"time'{duration}'";
+        }
 
         private string Val(DateTime value) => $"datetime'{value:yyyy-MM-ddTHH:mm:ss.fffffff}'";
 
