@@ -73,9 +73,13 @@ namespace ODataHttpClient.Tests
         public void TimeSpanParam()
         {
             var odata = new ODataParameterizer();
-            var query = odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) });
 
-            Assert.Equal("$filter=Value eq time'PT1H'", query);
+            Assert.Equal("$filter=Value eq time'P30DT0H0M0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromDays(30) }));
+            Assert.Equal("$filter=Value eq time'P0DT1H0M0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) }));
+            Assert.Equal("$filter=Value eq time'P0DT0H15M0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMinutes(15) }));
+            Assert.Equal("$filter=Value eq time'P0DT0H0M1S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromSeconds(1) }));
+            Assert.Equal("$filter=Value eq time'P0DT0H0M0.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(500) }));
+            Assert.Equal("$filter=Value eq time'P0DT0H0M1.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(1500) }));
         }
 
         [Fact]
@@ -93,7 +97,7 @@ namespace ODataHttpClient.Tests
             var odata = new ODataParameterizer();
             var query = odata.Parameterize("$filter=Value eq @Value", new { Value = DateTimeOffset.MaxValue });
 
-            Assert.Equal("$filter=Value eq datetimeoffset'9999-12-31T23:59:59.9999999Z'", query);
+            Assert.Equal("$filter=Value eq datetimeoffset'9999-12-31T23:59:59.9999999+00:00'", query);
         }
 
         [Fact]
