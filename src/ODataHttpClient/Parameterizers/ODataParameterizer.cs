@@ -21,44 +21,44 @@ namespace ODataHttpClient.Parameterizers
 
         private string Replace(string query, string name, object value)
         {
-            return Regex.Replace(query, $"([^@])@{name}", "${1}" + Val(value));
+            return Regex.Replace(query, $"([^@])@{name}", "${1}" + Literal(value));
         }
-        private string Val(object value)
+        private string Literal(object value)
         {
             if (value == null)
                 return "null";
 
             switch (value)
             {
-                case long val: return Val(val);
-                case float val: return Val(val);
-                case double val: return Val(val);
-                case decimal val: return Val(val);
-                case byte[] val: return Val(val);
-                case string val: return Val(val);
-                case Guid val: return Val(val);
-                case TimeSpan val: return Val(val);
-                case DateTime val: return Val(val);
-                case DateTimeOffset val: return Val(val);
+                case long val: return Literal(val);
+                case float val: return Literal(val);
+                case double val: return Literal(val);
+                case decimal val: return Literal(val);
+                case byte[] val: return Literal(val);
+                case string val: return Literal(val);
+                case Guid val: return Literal(val);
+                case TimeSpan val: return Literal(val);
+                case DateTime val: return Literal(val);
+                case DateTimeOffset val: return Literal(val);
                 default: return value.ToString();
             }
         }
 
-        private string Val(long value) => $"{value}L";
+        private string Literal(long value) => $"{value}L";
 
-        private string Val(float value) => $"{value}f";
+        private string Literal(float value) => $"{value}f";
 
-        private string Val(double value) => $"{value}d";
+        private string Literal(double value) => $"{value}d";
 
-        private string Val(decimal value) => $"{value}M";
+        private string Literal(decimal value) => $"{value}M";
 
-        private string Val(byte[] value) => $"binary'{String.Join("", value.Select(b => b.ToString("X2")))}'";
+        private string Literal(byte[] value) => $"binary'{String.Join("", value.Select(b => b.ToString("X2")))}'";
 
-        private string Val(string value) => $"'{value.Replace("@", "@@")}'";
+        private string Literal(string value) => $"'{value.Replace("@", "@@")}'";
 
-        private string Val(Guid value) => $"guid'{value}'";
+        private string Literal(Guid value) => $"guid'{value}'";
 
-        private string Val(TimeSpan value)
+        private string Literal(TimeSpan value)
         {
             var duration = string.Join("", 
                 new[]{ 
@@ -75,8 +75,8 @@ namespace ODataHttpClient.Parameterizers
             return $"time'{duration}'";
         }
 
-        private string Val(DateTime value) => $"datetime'{value:yyyy-MM-ddTHH:mm:ss.fffffff}'";
+        private string Literal(DateTime value) => $"datetime'{value:yyyy-MM-ddTHH:mm:ss.fffffff}'";
 
-        private string Val(DateTimeOffset value) => $"datetimeoffset'{value:yyyy-MM-ddTHH:mm:ss.fffffffzzz}'";
+        private string Literal(DateTimeOffset value) => $"datetimeoffset'{value:yyyy-MM-ddTHH:mm:ss.fffffffzzz}'";
     }
 }
