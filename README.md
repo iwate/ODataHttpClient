@@ -1,7 +1,7 @@
 [![CircleCI](https://circleci.com/gh/iwate/ODataHttpClient/tree/master.svg?style=svg)](https://circleci.com/gh/iwate/ODataHttpClient/tree/master)
 [![NuGet version](https://badge.fury.io/nu/ODataHttpClient.svg)](https://badge.fury.io/nu/ODataHttpClient)
 
-The simplest implementation from of OData client.
+The simplest implementation of OData client.
 
 ## Install
 
