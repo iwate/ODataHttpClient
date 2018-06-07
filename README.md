@@ -1,7 +1,7 @@
 [![CircleCI](https://circleci.com/gh/iwate/ODataHttpClient/tree/master.svg?style=svg)](https://circleci.com/gh/iwate/ODataHttpClient/tree/master)
 [![NuGet version](https://badge.fury.io/nu/ODataHttpClient.svg)](https://badge.fury.io/nu/ODataHttpClient)
 
-The simplest implementation from of OData client.
+The simplest implementation of OData client.
 
 ## Install
 
@@ -64,6 +64,8 @@ The simplest implementation from of OData client.
     {
         ...
     }
+
+And you can use `@@` as escape for `@`.
 
 ### Set OData Element Type
 In default, OData element type is not contains in payload. If you want add element type, you sould use `type` parameter of Request factory method.
