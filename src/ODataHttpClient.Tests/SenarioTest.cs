@@ -32,6 +32,21 @@ namespace ODataHttpClient.Tests
             Assert.True(products.Count() > 0);
         }
         [Fact]
+        public async Task GetProductsByBatch()
+        {
+            var responses = await odata.BatchAsync(new BatchRequest($"{endpoint}/$batch")
+            {
+                Requests = new [] {Request.Get($"{endpoint}/Products")}
+            });
+
+            Assert.True(responses.All(res => res.Success));
+
+            var products = responses.First().ReadAs<IEnumerable<dynamic>>("$.value");
+
+            Assert.NotNull(products);
+            Assert.True(products.Count() > 0);
+        }
+        [Fact]
         public async Task GetProduct()
         {
             var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = 1 }));
@@ -90,7 +105,8 @@ namespace ODataHttpClient.Tests
                     Request.Post($"{endpoint}/$1/$links/Categories", new 
                     {
                         url = $"{endpoint}/Categories(0)"
-                    })
+                    }),
+                    Request.Get($"{endpoint}/Products")
                 }
             };
 

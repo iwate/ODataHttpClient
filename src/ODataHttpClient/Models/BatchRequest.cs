@@ -18,21 +18,43 @@ namespace ODataHttpClient.Models
 
         protected HttpContent CreateContent()
         {
-            var batch = new MultipartContent("mixed", "batch" + Guid.NewGuid());
-
-            var changeset = new MultipartContent("mixed", "changeset" + Guid.NewGuid());
-            var contents = Requests.Select((req, index) => {
+            HttpMessageContent create(IRequest req, int index) {
                 var message = req.CreateMessage();
                 message.Headers.Add("Content-ID", $"{index + 1}");
                 var content = new HttpMessageContent(message);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/http");
                 content.Headers.Add("Content-Transfer-Encoding", "binary");
                 return content;
-            });
-            foreach (var content in contents)
-                changeset.Add(content);
+            }
 
-            batch.Add(changeset);
+            MultipartContent batch = new MultipartContent("mixed", "batch" + Guid.NewGuid());
+            MultipartContent changeset = null;
+            foreach((var req, int index) in Requests.Select((req, index) => (req, index)))
+            {
+                if (req.Method == HttpMethod.Get || req.Method == HttpMethod.Head)
+                {
+                    if (changeset != null)
+                    {
+                        batch.Add(changeset);
+                        changeset = null;
+                    }
+                    batch.Add(create(req, index));
+                }
+                else
+                {
+                    if (changeset == null) 
+                    {
+                        changeset = new MultipartContent("mixed", "changeset" + Guid.NewGuid());
+                    }
+                    changeset.Add(create(req, index));
+                }
+            }
+            
+            if (changeset != null)
+            {
+                batch.Add(changeset);
+                changeset = null;
+            }
 
             return batch;
         }
