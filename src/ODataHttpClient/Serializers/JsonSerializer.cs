@@ -21,7 +21,12 @@ namespace ODataHttpClient.Serializers
 
         public T Deserialize<T>(string json, string path)
         {
-            return JToken.Parse(json).SelectToken(path).ToObject<T>(_serializer);
+            var token = JToken.Parse(json).SelectToken(path);
+            
+            if (token == null)
+                return default(T);
+
+            return token.ToObject<T>(_serializer);
         }
 
         private static readonly JsonSerializerSettings _historical = new JsonSerializerSettings

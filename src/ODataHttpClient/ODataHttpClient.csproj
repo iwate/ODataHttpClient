@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.5.0</Version>
-    <PackageVersion>1.5.1$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.5.2$(VersionSuffix)</PackageVersion>
     <PackageId>ODataHttpClient</PackageId>
     <Authors>iwate</Authors>
     <Copyright>iwate</Copyright>
@@ -12,6 +12,8 @@
     <PackageProjectUrl>https://iwate.github.io/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <PackageReleaseNotes>
++ v1.5.2
+  - [Bug fix] Fix serialization for illegal JSON Path 
 + v1.5.1
   - [Bug fix] Fix Batch request of GET &amp; HEAD
 + v1.5.0

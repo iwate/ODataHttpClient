@@ -36,6 +36,14 @@ namespace ODataHttpClient.Tests
             Assert.Equal("ODataDemo.Product", type);
         }
         [Fact]
+        public void ReadJsonAsWithPath3()
+        {
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "application/json", "{\"odata.type\": \"ODataDemo.Product\"}");
+            var nextLink =  response.ReadAs<string>("$['odata.nextLink']");
+
+            Assert.Null(nextLink);
+        }
+        [Fact]
         public void ReadTextAsString()
         {
             var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100");
