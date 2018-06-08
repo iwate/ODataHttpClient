@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <PackageReleaseNotes>
 + v1.5.1
-  - [Bug fix] Fix Batch request of GET & HEAD
+  - [Bug fix] Fix Batch request of GET &amp; HEAD
 + v1.5.0
   - change version of references
 + v1.4.2
