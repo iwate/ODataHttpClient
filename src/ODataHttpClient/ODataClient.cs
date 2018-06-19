@@ -41,8 +41,11 @@ namespace ODataHttpClient
             var code = (int)status;
             var body = content != null ? await content.ReadAsByteArrayAsync() : null;
             var mime = content?.Headers.ContentType?.MediaType;
+
+            if (code == 404)
+                return Response.CreateSuccess(status, mime, (byte[])null);
             
-            if (code >= 400 && code != 404)
+            if (code >= 400)
                 return Response.CreateError(status, body);
             
             return Response.CreateSuccess(status, mime, body);

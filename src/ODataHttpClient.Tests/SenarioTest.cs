@@ -122,5 +122,17 @@ namespace ODataHttpClient.Tests
 
             Assert.True(deleted.Success);
         }
+
+        [Fact]
+        public async Task GetNullWhenNotFound()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(-1)"));
+
+            Assert.True(response.Success);
+
+            var product = response.ReadAs<IEnumerable<dynamic>>();
+
+            Assert.Null(product);
+        }
     }
 }
