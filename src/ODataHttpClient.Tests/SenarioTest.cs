@@ -110,7 +110,7 @@ namespace ODataHttpClient.Tests
                 }
             };
 
-            var responses = await odata.BatchAsync(batch);
+            var responses = await odata.SendAsync(batch);
             
             Assert.Equal(batch.Requests.Count(), responses.Count());
             

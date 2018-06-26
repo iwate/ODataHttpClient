@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 
 namespace ODataHttpClient.Models
 {
-    public class BatchRequest : IRequest
+    public class BatchRequest : IBatchRequest
     {
         public string Uri { get; }
         public ICollection<Request> Requests { get; set; } 

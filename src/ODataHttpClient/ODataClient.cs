@@ -84,8 +84,11 @@ namespace ODataHttpClient
             
             return await ParseAsync(response.StatusCode, response.Content);
         }
-        public async Task<IEnumerable<Response>> BatchAsync(IRequest request)
-
+        public async Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest)
+        {
+            return await BatchAsync(batchRequest);
+        }
+        public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request)
         {
             var message = request.CreateMessage();
             
