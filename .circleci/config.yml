@@ -25,9 +25,8 @@ jobs:
           key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
-            s=$(echo $CIRCLE_TAG | sed 's/v[0-9]+(\.[0-9]+)*//' -r)
             cd ~/repo/src/ODataHttpClient
-            sed -i -e "s/[$]version[$]/$s/g" ./ODataHttpClient.nuspec
+            sed -i -e "s/[$]version[$]/$CIRCLE_TAG/g" ./ODataHttpClient.nuspec
             dotnet pack -c Release
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push:
