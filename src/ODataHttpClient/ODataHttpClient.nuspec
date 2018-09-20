@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>ODataHttpClient</id>
-    <version>1.6.1$versionsuffix$</version>
+    <version>$version$</version>
     <authors>iwate</authors>
     <owners>iwate</owners>
     <copyright>iwate</copyright>

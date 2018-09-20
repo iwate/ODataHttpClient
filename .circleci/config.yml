@@ -27,7 +27,8 @@ jobs:
           command: |
             s=$(echo $CIRCLE_TAG | sed 's/v[0-9]+(\.[0-9]+)*//' -r)
             cd ~/repo/src/ODataHttpClient
-            dotnet pack -c Release --version-suffix $s
+            sed -i -e "s/[$]version[$]/$s/g" ./ODataHttpClient.nuspec
+            dotnet pack -c Release
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
   push:
     docker:
