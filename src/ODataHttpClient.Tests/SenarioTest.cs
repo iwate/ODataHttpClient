@@ -11,7 +11,7 @@ namespace ODataHttpClient.Tests
 {
     public class SenarioTest
     {
-        const string endpoint = "http://services.odata.org/V3/(S(ni3esrvxcoxxfea2kdchzo0o))/OData/OData.svc";
+        const string endpoint = "https://services.odata.org/V3/(S(ni3esrvxcoxxfea2kdchzo0o))/OData/OData.svc";
         static HttpClient httpClient = new HttpClient();
         static ODataClient odata = new ODataClient(httpClient);
         public SenarioTest()
