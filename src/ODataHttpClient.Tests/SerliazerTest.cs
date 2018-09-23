@@ -1,5 +1,6 @@
 ﻿using ODataHttpClient.Models;
 using ODataHttpClient.Serializers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -57,6 +58,14 @@ namespace ODataHttpClient.Tests
         {
             var actual = JsonSerializer.General.Deserialize<byte[]>("\"AAAAAAACSho=\"");
             var expected = new byte[] { 0, 0, 0, 0, 0, 2, 74, 26 };
+            Assert.True(Enumerable.SequenceEqual(expected, actual));
+        }
+        [Fact]
+        public void DeserializeArrayWithJsonPath()
+        {
+            var json = "{\"items\":[{\"items\":[{\"item\":0},{\"item\":1}]},{\"items\":[{\"item\":2}]}]}";
+            var actual = JsonSerializer.General.Deserialize<IEnumerable<int>>(json, "$..item");
+            var expected = new [] { 0, 1, 2 };
             Assert.True(Enumerable.SequenceEqual(expected, actual));
         }
     }
