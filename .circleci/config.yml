@@ -40,6 +40,8 @@ jobs:
       - run:
           command: |
             cd ~/repo/src/ODataHttpClient
+            version=$(echo $CIRCLE_TAG | sed 's/v//' -r)
+            sed -i -e "s/[$]version[$]/$version/g" ./ODataHttpClient.nuspec
             dotnet pack -c Release
             dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_TOKEN
 workflows:
