@@ -13,6 +13,7 @@
     <description>The simplest implementation from of OData client.</description>
     <releaseNotes>+v1.6.1
   - Improve dependencies resolving
+  - [Bug fix] Fix Deserialize with json path for array result.
 + v1.6.0
   - Add SendAsync method for batch request: compatible BatchAsync
   - Change interface of BatchAsync
