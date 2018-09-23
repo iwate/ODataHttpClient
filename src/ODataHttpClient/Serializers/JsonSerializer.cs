@@ -1,4 +1,9 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -19,7 +24,30 @@ namespace ODataHttpClient.Serializers
             return JsonConvert.DeserializeObject<T>(json, _settings);
         }
 
+        private static readonly Type _ienumerable = typeof(IEnumerable);
+        private static readonly Type _this = typeof(JsonSerializer);
+        private static readonly Regex _multiple = new Regex(@"\.\.|\[\d*:\d*\]|\[\*\]");
         public T Deserialize<T>(string json, string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return Deserialize<T>(json);
+            
+            var multiple = _multiple.Match(path).Success;
+
+            if (!multiple)
+                return DeserializeObject<T>(json, path);
+            
+            var type = typeof(T);
+            var genericArgs = type.GetGenericArguments().ToArray();
+
+            if (genericArgs.Length != 1)
+                throw new NotSupportedException($"{type.FullName} is not supported.");
+
+            var method = _this.GetMethod(nameof(DeserializeArray),BindingFlags.NonPublic|BindingFlags.Instance).MakeGenericMethod(type, genericArgs[0]);
+            return (T)method.Invoke(this, new object[]{json, path});
+        }
+
+        private T DeserializeObject<T>(string json, string path)
         {
             var token = JToken.Parse(json).SelectToken(path);
             
@@ -27,6 +55,22 @@ namespace ODataHttpClient.Serializers
                 return default(T);
 
             return token.ToObject<T>(_serializer);
+        }
+
+        private T DeserializeArray<T, E>(string json, string path) where T : class, IEnumerable<E>
+        {
+            var items = JToken.Parse(json).SelectTokens(path).Select(t => t.ToObject<E>(_serializer));
+            var type = typeof(T);
+            var fullName = type.FullName;
+
+            if (type.IsArray || fullName.StartsWith("System.Collections.Generic.IEnumerable"))
+                return items.ToArray() as T;
+            
+            if (fullName.StartsWith("System.Collections.Generic.ICollection") || 
+                fullName.StartsWith("System.Collections.Generic.List"))
+                return items.ToList() as T;
+
+            throw new NotSupportedException($"{type.FullName} is not supported now.");
         }
 
         private static readonly JsonSerializerSettings _historical = new JsonSerializerSettings
