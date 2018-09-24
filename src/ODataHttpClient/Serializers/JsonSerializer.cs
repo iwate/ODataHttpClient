@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Concurrent;
 
 namespace ODataHttpClient.Serializers
 {
@@ -24,27 +25,21 @@ namespace ODataHttpClient.Serializers
             return JsonConvert.DeserializeObject<T>(json, _settings);
         }
 
-        private static readonly Type _ienumerable = typeof(IEnumerable);
         private static readonly Type _this = typeof(JsonSerializer);
-        private static readonly Regex _multiple = new Regex(@"\.\.|\[\d*:\d*\]|\[\*\]");
+        private static readonly MethodInfo _deserializeArray = _this.GetMethod(nameof(DeserializeArray),BindingFlags.NonPublic|BindingFlags.Instance);
         public T Deserialize<T>(string json, string path)
         {
             if (string.IsNullOrEmpty(path))
                 return Deserialize<T>(json);
-            
-            var multiple = _multiple.Match(path).Success;
 
-            if (!multiple)
+            var type = typeof(T);
+
+            if (!type.IsMultiple())
                 return DeserializeObject<T>(json, path);
             
-            var type = typeof(T);
-            var genericArgs = type.GetGenericArguments().ToArray();
-
-            if (genericArgs.Length != 1)
-                throw new NotSupportedException($"{type.FullName} is not supported.");
-
-            var method = _this.GetMethod(nameof(DeserializeArray),BindingFlags.NonPublic|BindingFlags.Instance).MakeGenericMethod(type, genericArgs[0]);
-            return (T)method.Invoke(this, new object[]{json, path});
+            var itemType = type.GetItemType();
+            var method = _deserializeArray.MakeGenericMethod(type, itemType);
+            return (T)method.Invoke(this, new []{json, path});
         }
 
         private T DeserializeObject<T>(string json, string path)

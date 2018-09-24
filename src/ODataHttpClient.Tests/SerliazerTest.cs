@@ -68,5 +68,23 @@ namespace ODataHttpClient.Tests
             var expected = new [] { 0, 1, 2 };
             Assert.True(Enumerable.SequenceEqual(expected, actual));
         }
+
+        [Fact]
+        public void DeserializeArrayWithJsonPath_Range()
+        {
+            var json = "[0,1,2,3,4,5]";
+            var actual = JsonSerializer.General.Deserialize<IEnumerable<int>>(json, "$[-2:]");
+            var expected = new [] { 4, 5 };
+            Assert.True(Enumerable.SequenceEqual(expected, actual));
+        }
+
+        [Fact]
+        public void DeserializeArrayWithJsonPath_MultiSelect()
+        {
+            var json = "{\"A\":0,\"B\":1,\"C\":2}";
+            var actual = JsonSerializer.General.Deserialize<int[]>(json, "$['A','C']");
+            var expected = new [] { 0, 2 };
+            Assert.True(Enumerable.SequenceEqual(expected, actual));
+        }
     }
 }
