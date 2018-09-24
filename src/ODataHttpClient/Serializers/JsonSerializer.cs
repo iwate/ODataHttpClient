@@ -38,6 +38,10 @@ namespace ODataHttpClient.Serializers
                 return DeserializeObject<T>(json, path);
             
             var itemType = type.GetItemType();
+
+            if (itemType == null)
+                return DeserializeObject<T>(json, path);
+            
             var method = _deserializeArray.MakeGenericMethod(type, itemType);
             return (T)method.Invoke(this, new []{json, path});
         }
