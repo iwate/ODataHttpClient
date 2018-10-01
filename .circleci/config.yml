@@ -11,7 +11,10 @@ jobs:
           command: cd ~/repo/src && dotnet build
       - run:
           name: Test
-          command: cd ~/repo/src/ODataHttpClient.Tests && dotnet test
+          command: |
+            cd ~/repo/src/ODataHttpClient.Tests
+            dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
+            bash <(curl -s https://codecov.io/bash)
       - save_cache:
           paths:
             - ~/repo
