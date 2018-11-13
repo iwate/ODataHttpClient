@@ -24,6 +24,7 @@ namespace ODataHttpClient.Models
         {
             var message = new HttpRequestMessage(Method, Uri);
             
+            message.Version = new Version(1, 1);
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
