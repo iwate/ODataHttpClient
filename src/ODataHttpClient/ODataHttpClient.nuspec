@@ -10,8 +10,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://github.com/iwate/ODataHttpClient/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://iwate.github.io/ODataHttpClient</projectUrl>
-    <description>The simplest implementation from of OData client.</description>
-    <releaseNotes>+ v1.6.2
+    <description>The simplest implementation of OData client.</description>
+    <releaseNotes>+ v1.6.3
+  - [Bug fix] Fix batch request issue on netcoreapp2.1
++ v1.6.2
   - [Bug fix] Enhanced Deserialize with json path for array result
 + v1.6.1
   - Improve dependencies resolving
