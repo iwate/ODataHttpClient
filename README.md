@@ -71,7 +71,7 @@ The simplest implementation of OData client.
 And you can use `@@` as escape for `@`.
 
 ### Set OData Element Type
-In default, OData element type is not contains in payload. If you want add element type, you sould use `type` parameter of Request factory method.
+In default, OData element type is not contained in payload. If you want add element type, you sould use `type` parameter of Request factory method.
 
     Request.Post("...", payload, type: "ODataDemo.Product")
 
