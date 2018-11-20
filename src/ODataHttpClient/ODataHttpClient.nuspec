@@ -11,7 +11,9 @@
     <licenseUrl>https://github.com/iwate/ODataHttpClient/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://iwate.github.io/ODataHttpClient</projectUrl>
     <description>The simplest implementation of OData client.</description>
-    <releaseNotes>+ v1.6.4
+    <releaseNotes>+ v1.6.5
+  - Add v4 OData parameterizer
++ v1.6.4
   - [Bug fix] Fix deserialize with json path for array
 + v1.6.3
   - [Bug fix] Fix batch request issue on netcoreapp2.1
