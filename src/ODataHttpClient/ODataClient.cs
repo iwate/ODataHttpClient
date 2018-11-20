@@ -1,5 +1,6 @@
 using ODataHttpClient.Credentials;
 using ODataHttpClient.Models;
+using ODataHttpClient.Parameterizers;
 using ODataHttpClient.Serializers;
 using System;
 using System.Collections.Generic;
@@ -103,6 +104,12 @@ namespace ODataHttpClient
             var multipart = await response.Content.ReadAsMultipartAsync();
 
             return await ParseMultiAsync(multipart);
+        }
+
+        public static void UseV4Global()
+        {
+            JsonSerializer.Default = JsonSerializer.General;
+            Request.Parameterizer = new ODataV4Parameterizer();
         }
     }
 }
