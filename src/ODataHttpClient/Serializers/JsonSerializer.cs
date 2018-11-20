@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Concurrent;
 
 namespace ODataHttpClient.Serializers
 {
@@ -36,7 +33,12 @@ namespace ODataHttpClient.Serializers
 
             if (!type.IsMultiple())
                 return DeserializeObject<T>(json, path);
-            
+
+            // This code cannot cover all jsonpath pattern.
+            // If you have faced trouble, make a issue, please:)
+            if (!path.Contains("..") && !path.Contains("["))
+                return DeserializeObject<T>(json, path);
+
             var itemType = type.GetItemType();
 
             if (itemType == null)

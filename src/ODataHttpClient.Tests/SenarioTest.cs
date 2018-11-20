@@ -31,6 +31,19 @@ namespace ODataHttpClient.Tests
             Assert.NotNull(products);
             Assert.True(products.Count() > 0);
         }
+        public class Product { public int Id { get; set; } }
+        [Fact]
+        public async Task GetProductsWithModel()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products"));
+
+            Assert.True(response.Success);
+
+            var products = response.ReadAs<IEnumerable<Product>>("$.value");
+
+            Assert.NotNull(products);
+            Assert.True(products.Count() > 0);
+        }
         [Fact]
         public async Task GetProductsByBatch()
         {
