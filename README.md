@@ -80,6 +80,16 @@ In default, OData element type key is `odata.type`. If you want change key to ot
 
     Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")
 
+### Use for OData v4
+If you use for ODatav4, you have to change serializer and parametalizer.
+
+#### 1. Global level settings
+
+    ODataClient.UseV4Global();
+
+#### 2. Client level settings
+not yet. If you want, please create issue ticket.
+
 ## Credential
 
 ### Basic Auth
