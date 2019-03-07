@@ -11,7 +11,10 @@
     <licenseUrl>https://github.com/iwate/ODataHttpClient/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://iwate.github.io/ODataHttpClient</projectUrl>
     <description>The simplest implementation of OData client.</description>
-    <releaseNotes>+ v1.6.5
+    <releaseNotes>+ v1.6.6
+  - Add constructor
+  - Support any provider has multi format of batch response
++ v1.6.5
   - Add v4 OData parameterizer
 + v1.6.4
   - [Bug fix] Fix deserialize with json path for array
