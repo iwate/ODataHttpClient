@@ -61,10 +61,14 @@ namespace ODataHttpClient.Models
 
         public HttpRequestMessage CreateMessage()
         {
-            return new HttpRequestMessage(HttpMethod.Post, Uri)
+            var message = new HttpRequestMessage(HttpMethod.Post, Uri)
             {
-                Content = CreateContent()
+                Content = CreateContent(),
             };
+
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
+
+            return message;
         }
     }
 }
