@@ -24,6 +24,9 @@ namespace ODataHttpClient
         public ODataClient(HttpClient httpClient, IJsonSerializer serializer)
             : this(httpClient, null, serializer)
         {}
+        public ODataClient(HttpClient httpClient, ICredentialBuilder credentialBuilder)
+            : this(httpClient, credentialBuilder, JsonSerializer.Default)
+        { }
         public ODataClient(HttpClient httpClient, string username, string password) 
             : this(httpClient, username, password, JsonSerializer.Default)
         {}
