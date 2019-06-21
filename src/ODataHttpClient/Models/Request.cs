@@ -57,7 +57,8 @@ namespace ODataHttpClient.Models
 
             if (type.IsValueType || type == stringType)
             {
-                content = body.ToString();
+                //content = body.ToString(); 
+                content = serializer.Serialize<T>(body);
                 mime = "text/plain";
             }
             else
