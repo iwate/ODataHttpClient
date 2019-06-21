@@ -1,5 +1,6 @@
 using ODataHttpClient.Serializers;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -53,10 +54,10 @@ namespace ODataHttpClient.Models
                     return (T)(object)Convert.ToInt64(Body);
 
                 if (type == typeof(double) || type == typeof(double?))
-                    return (T)(object)Convert.ToDouble(Body);
+                    return (T)(object)Convert.ToDouble(Body, CultureInfo.InvariantCulture);
 
                 if (type == typeof(decimal) || type == typeof(decimal?))
-                    return (T)(object)Convert.ToDecimal(Body);
+                    return (T)(object)Convert.ToDecimal(Body, CultureInfo.InvariantCulture);
 
                 if (type == typeof(DateTime) || type == typeof(DateTime?))
                     return (T)(object)Convert.ToDateTime(Body);

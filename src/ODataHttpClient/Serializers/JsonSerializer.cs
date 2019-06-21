@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -85,14 +86,16 @@ namespace ODataHttpClient.Serializers
                 new TypeToStringConverter<double?>(),
                 new TypeToStringConverter<decimal>(),
                 new TypeToStringConverter<decimal?>(),
-            }
+            },
+            Culture = CultureInfo.InvariantCulture
         };
         private static readonly JsonSerializerSettings _general = new JsonSerializerSettings
         {
             Converters =
             {
                 new ByteArrayConverter()
-            }
+            },
+            Culture = CultureInfo.InvariantCulture
         };
         public static JsonSerializer Historical = new JsonSerializer
         {

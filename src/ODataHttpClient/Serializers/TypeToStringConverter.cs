@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using static System.FormattableString;
 
 namespace ODataHttpClient.Serializers
 {
@@ -8,19 +9,19 @@ namespace ODataHttpClient.Serializers
     {
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
-            JToken jt = JValue.ReadFrom(reader);
+            JToken jt = JToken.ReadFrom(reader);
 
             return jt.Value<T>();
         }
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(T).Equals(objectType);
+            return typeof(T) == objectType;
         }
 
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
-            serializer.Serialize(writer, value?.ToString());
+            serializer.Serialize(writer, Invariant($"{value}"));
         }
     }
 }
