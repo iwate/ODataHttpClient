@@ -20,7 +20,7 @@ The simplest implementation of OData client.
 
     var client = new HttpClient();
     var odata = new ODataClient(client);
-    var reqest = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
+    var request = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
     var response = await odata.SendAsync(request);
 
     if (response.Success) 
@@ -60,7 +60,7 @@ The simplest implementation of OData client.
 
     var client = new HttpClient();
     var odata = new ODataClient(client);
-    var reqest = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTime(2000, 1, 1) });
+    var request = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTime(2000, 1, 1) });
     var response = await odata.SendAsync(request);
 
     if (response.Success) 
