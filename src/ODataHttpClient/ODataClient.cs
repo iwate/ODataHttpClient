@@ -40,21 +40,22 @@ namespace ODataHttpClient
             RequestFactory = new RequestFactory(serializer);
         }
 
-        protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content)
+        protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content, HttpRequestHeaders headers = null)
         {
             var code = (int)status;
             var body = content != null ? await content.ReadAsByteArrayAsync() : null;
             var mime = content?.Headers.ContentType?.MediaType;
 
             if (code == 404)
-                return Response.CreateSuccess(status, mime, (byte[])null);
+                return Response.CreateSuccess(status, mime, (byte[])null, headers);
             
             if (code >= 400)
-                return Response.CreateError(status, body);
+                return Response.CreateError(status, body, headers);
             
-            return Response.CreateSuccess(status, mime, body);
+            return Response.CreateSuccess(status, mime, body, headers);
         }
-        protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart)
+
+		protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpRequestHeaders headers = null)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -80,13 +81,13 @@ namespace ODataHttpClient
 
         public async Task<Response> SendAsync(IRequest request)
         {
-            var message = request.CreateMessage();
+            var message = request.CreateMessage(request.Headers);
 
             _credentialBuilder?.Build(_httpClient, message);
 
             var response = await _httpClient.SendAsync(message);
             
-            return await ParseAsync(response.StatusCode, response.Content);
+            return await ParseAsync(response.StatusCode, response.Content, request.Headers);
         }
         public async Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest)
         {
@@ -94,7 +95,7 @@ namespace ODataHttpClient
         }
         public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request)
         {
-            var message = request.CreateMessage();
+            var message = request.CreateMessage(request.Headers);
             
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _credentialBuilder?.Build(_httpClient, message);
@@ -102,11 +103,11 @@ namespace ODataHttpClient
             var response = await _httpClient.SendAsync(message);
 
             if (!response.Content.IsMimeMultipartContent())
-                return new[] { await ParseAsync(response.StatusCode, response.Content) };
+                return new[] { await ParseAsync(response.StatusCode, response.Content, request.Headers) };
 
             var multipart = await response.Content.ReadAsMultipartAsync();
 
-            return await ParseMultiAsync(multipart);
+            return await ParseMultiAsync(multipart, request.Headers);
         }
 
         public static void UseV4Global()

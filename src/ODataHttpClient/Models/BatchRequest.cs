@@ -10,6 +10,7 @@ namespace ODataHttpClient.Models
     {
         public string Uri { get; }
         public ICollection<Request> Requests { get; set; } 
+        public HttpRequestHeaders Headers { get; private set; }
         public BatchRequest(string uri)
         {
             Uri = uri;
@@ -59,7 +60,7 @@ namespace ODataHttpClient.Models
             return batch;
         }
 
-        public HttpRequestMessage CreateMessage()
+        public HttpRequestMessage CreateMessage(HttpRequestHeaders headers = null)
         {
             var message = new HttpRequestMessage(HttpMethod.Post, Uri)
             {
@@ -67,6 +68,9 @@ namespace ODataHttpClient.Models
             };
 
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
+            if (headers is null) return message;
+            foreach (var header in headers)
+                message.Headers.Add(header.Key, header.Value);
 
             return message;
         }
