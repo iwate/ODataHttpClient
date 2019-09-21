@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ODataHttpClient.Models
 {
-    public class Response : IResponse
+    public class Response
     {
         private IJsonSerializer _serializer = JsonSerializer.Default;
         public bool Success { get; private set; }
@@ -16,7 +16,7 @@ namespace ODataHttpClient.Models
         public string ErrorMessage { get; private set; }
         public byte[] Binary { get; private set; }
         public string Body { get => Binary != null ? Encoding.UTF8.GetString(Binary) : null; }
-		public HttpRequestHeaders Headers { get; private set; }
+		public HttpResponseHeaders Headers { get; private set; }
 
 		private Response(){}
 
@@ -80,28 +80,28 @@ namespace ODataHttpClient.Models
             throw new NotSupportedException();
         }
 
-        public static Response CreateError(HttpStatusCode code, byte[] body, HttpRequestHeaders headers)
+        public static Response CreateError(HttpStatusCode code, byte[] body, HttpResponseHeaders headers)
         {
             return CreateError(code, body != null ? Encoding.UTF8.GetString(body) : null, headers);
         }
-        public static Response CreateError(HttpStatusCode code, string message, HttpRequestHeaders headers)
+        public static Response CreateError(HttpStatusCode code, string message, HttpResponseHeaders headers)
         {
             return new Response { Success = false, StatusCode = code, ErrorMessage = message, Headers = headers };
         }
 
-        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, HttpRequestHeaders headers = null)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, HttpResponseHeaders headers = null)
         {
             return CreateSuccess(code, mime, body, JsonSerializer.Default, headers);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, HttpRequestHeaders headers = null)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, HttpResponseHeaders headers = null)
         {
             return CreateSuccess(code, mime, body, JsonSerializer.Default, headers);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, IJsonSerializer serializer, HttpRequestHeaders headers)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, IJsonSerializer serializer, HttpResponseHeaders headers)
         {
             return CreateSuccess(code, mime, body != null ? Encoding.UTF8.GetBytes(body) : null, serializer, headers);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, IJsonSerializer serializer, HttpRequestHeaders headers)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, IJsonSerializer serializer, HttpResponseHeaders headers)
         {
             return new Response { Success = true, StatusCode = code, MediaType = mime, Binary = body, _serializer = serializer, Headers = headers };
         }

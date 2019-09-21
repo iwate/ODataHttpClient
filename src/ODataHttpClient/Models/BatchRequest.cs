@@ -60,11 +60,23 @@ namespace ODataHttpClient.Models
             return batch;
         }
 
-        public HttpRequestMessage CreateMessage(HttpRequestHeaders headers = null)
+        public HttpRequestMessage CreateMessage()
         {
             var message = new HttpRequestMessage(HttpMethod.Post, Uri)
             {
-                Content = CreateContent(),
+                Content = CreateContent()
+            };
+
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
+
+            return message;
+        }
+        
+        public HttpRequestMessage CreateMessage(HttpRequestHeaders headers)
+        {
+            var message = new HttpRequestMessage(HttpMethod.Post, Uri)
+            {
+                Content = CreateContent()
             };
 
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));

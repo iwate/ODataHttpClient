@@ -40,7 +40,7 @@ namespace ODataHttpClient
             RequestFactory = new RequestFactory(serializer);
         }
 
-        protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content, HttpRequestHeaders headers = null)
+        protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content, HttpResponseHeaders headers = null)
         {
             var code = (int)status;
             var body = content != null ? await content.ReadAsByteArrayAsync() : null;
@@ -55,7 +55,7 @@ namespace ODataHttpClient
             return Response.CreateSuccess(status, mime, body, headers);
         }
 
-		protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpRequestHeaders headers = null)
+		protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -87,7 +87,7 @@ namespace ODataHttpClient
 
             var response = await _httpClient.SendAsync(message);
             
-            return await ParseAsync(response.StatusCode, response.Content, request.Headers);
+            return await ParseAsync(response.StatusCode, response.Content, response.Headers);
         }
         public async Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest)
         {
@@ -103,11 +103,11 @@ namespace ODataHttpClient
             var response = await _httpClient.SendAsync(message);
 
             if (!response.Content.IsMimeMultipartContent())
-                return new[] { await ParseAsync(response.StatusCode, response.Content, request.Headers) };
+                return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers) };
 
             var multipart = await response.Content.ReadAsMultipartAsync();
 
-            return await ParseMultiAsync(multipart, request.Headers);
+            return await ParseMultiAsync(multipart, response.Headers);
         }
 
         public static void UseV4Global()

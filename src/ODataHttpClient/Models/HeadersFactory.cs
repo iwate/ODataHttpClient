@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace ODataHttpClient.Tests.Factories
+namespace ODataHttpClient.Models
 {
     public static class HeadersFactory
     {

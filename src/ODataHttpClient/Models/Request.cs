@@ -20,8 +20,20 @@ namespace ODataHttpClient.Models
         public string Body { get; private set; }
 
         private Request(){}
+        
+        public HttpRequestMessage CreateMessage()
+        {
+	        var message = new HttpRequestMessage(Method, Uri);
+	        message.Version = new Version(1, 1);
+	        InitMessageHeaders(null, message);
 
-		public HttpRequestMessage CreateMessage(HttpRequestHeaders headers = null)
+	        if (Body != null)
+		        message.Content = new StringContent(Body, Encoding.UTF8, MediaType);
+ 
+	        return message;
+        }
+
+		public HttpRequestMessage CreateMessage(HttpRequestHeaders headers)
 		{
 			var message = new HttpRequestMessage(Method, Uri);
 			message.Version = new Version(1, 1);

@@ -2,7 +2,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using ODataHttpClient.Models;
-using ODataHttpClient.Tests.Factories;
 using Xunit;
 
 namespace ODataHttpClient.Tests

@@ -6,6 +6,7 @@ namespace ODataHttpClient.Models
     public  interface IRequest
     {
         HttpRequestHeaders Headers { get; }
-        HttpRequestMessage CreateMessage(HttpRequestHeaders headers = null);
+        HttpRequestMessage CreateMessage();
+        HttpRequestMessage CreateMessage(HttpRequestHeaders headers);
     }
 }
