@@ -67,13 +67,13 @@ namespace ODataHttpClient
                     
                     var part = await content.ReadAsHttpResponseMessageAsync();
 
-                    result.Add(await ParseAsync(part.StatusCode, part.Content));
+                    result.Add(await ParseAsync(part.StatusCode, part.Content, headers));
                 }
                 else if (content.IsMimeMultipartContent())
                 {
                     var children = await content.ReadAsMultipartAsync();
 
-                    result.AddRange(await ParseMultiAsync(children));
+                    result.AddRange(await ParseMultiAsync(children, headers));
                 }
             }
             return result;
@@ -81,8 +81,8 @@ namespace ODataHttpClient
 
         public async Task<Response> SendAsync(IRequest request)
         {
-            var message = request.CreateMessage(request.Headers);
-
+            var message = request.CreateMessage();
+            SetUpHeaders(request as Request, message);
             _credentialBuilder?.Build(_httpClient, message);
 
             var response = await _httpClient.SendAsync(message);
@@ -95,10 +95,10 @@ namespace ODataHttpClient
         }
         public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request)
         {
-            var message = request.CreateMessage(request.Headers);
-            
+            var message = request.CreateMessage();
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _credentialBuilder?.Build(_httpClient, message);
+            SetUpHeaders(request as BatchRequest, message);
 
             var response = await _httpClient.SendAsync(message);
 
@@ -109,11 +109,27 @@ namespace ODataHttpClient
 
             return await ParseMultiAsync(multipart, response.Headers);
         }
-
         public static void UseV4Global()
         {
             JsonSerializer.Default = JsonSerializer.General;
             Request.Parameterizer = new ODataV4Parameterizer();
+        }
+        
+        private static void SetUpHeaders(Request request, HttpRequestMessage message)
+        {
+            if (request?.Headers == null)
+            {
+                return;
+            }
+            foreach (var header in  request.Headers) message.Headers.Add(header.Key, header.Value);
+        }
+        private static void SetUpHeaders(BatchRequest request, HttpRequestMessage message)
+        {
+            if (request?.Headers == null)
+            {
+                return;
+            }
+            foreach (var header in  request.Headers) message.Headers.Add(header.Key, header.Value);
         }
     }
 }

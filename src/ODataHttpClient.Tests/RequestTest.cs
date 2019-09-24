@@ -165,24 +165,7 @@ namespace ODataHttpClient.Tests
             Assert.Equal("1", req1.Headers.GetValues("Content-ID")?.FirstOrDefault());
             Assert.Equal("2", req2.Headers.GetValues("Content-ID")?.FirstOrDefault());
         }
-		[Fact]
-		public void BatchRequestWithHeader()
-		{
-			var message = new BatchRequest(batchUri)
-			{
-				Requests =
-				{
-					Request.Post(uri, new {}),
-					Request.Post(uri, new {})
-				}
-			}.CreateMessage(HeadersFactory.Create(
-				new[] { headerKey },
-				new[] { headerValue }));
-
-			Assert.True(message.Content.IsMimeMultipartContent());
-			Assert.True(message.Headers.Contains(headerKey));
-		}
-		[Fact]
+        [Fact]
 		public void CreateRequestWithHeaderByFactory()
 		{
 			var body = "text";

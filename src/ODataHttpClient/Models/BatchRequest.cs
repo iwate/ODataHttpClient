@@ -71,20 +71,5 @@ namespace ODataHttpClient.Models
 
             return message;
         }
-        
-        public HttpRequestMessage CreateMessage(HttpRequestHeaders headers)
-        {
-            var message = new HttpRequestMessage(HttpMethod.Post, Uri)
-            {
-                Content = CreateContent()
-            };
-
-            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
-            if (headers is null) return message;
-            foreach (var header in headers)
-                message.Headers.Add(header.Key, header.Value);
-
-            return message;
-        }
     }
 }

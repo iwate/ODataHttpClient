@@ -25,37 +25,15 @@ namespace ODataHttpClient.Models
         {
 	        var message = new HttpRequestMessage(Method, Uri);
 	        message.Version = new Version(1, 1);
-	        InitMessageHeaders(null, message);
+	        message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+	        message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
+	        message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
 
 	        if (Body != null)
 		        message.Content = new StringContent(Body, Encoding.UTF8, MediaType);
  
 	        return message;
         }
-
-		public HttpRequestMessage CreateMessage(HttpRequestHeaders headers)
-		{
-			var message = new HttpRequestMessage(Method, Uri);
-			message.Version = new Version(1, 1);
-			InitMessageHeaders(headers, message);
-
-			if (Body != null)
-				message.Content = new StringContent(Body, Encoding.UTF8, MediaType);
-
-			return message;
-		}
-		
-		private static void InitMessageHeaders(HttpRequestHeaders headers, HttpRequestMessage message)
-		{
-			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
-			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
-
-			if (headers is null) return;
-			foreach (var header in headers)
-				message.Headers.Add(header.Key, header.Value);
-		}
-
 
 		public static Request Create(HttpMethod method, string uri)
 		{
