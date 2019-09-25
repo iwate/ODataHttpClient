@@ -10,7 +10,9 @@ namespace ODataHttpClient.Tests
     {
         const string uri = "http://services.odata.org/V3/OData/OData.svc/Products";
         const string batchUri = "http://services.odata.org/V3/OData/OData.svc/$batch";
-        [Fact]
+		const string headerKey = "If-Match";
+		const string headerValue = "*";
+		[Fact]
         public void NonBodyRequest()
         {
             var request = Request.Create(HttpMethod.Get, uri);
@@ -45,37 +47,91 @@ namespace ODataHttpClient.Tests
             var request = Request.Get(uri);
             Assert.Equal(HttpMethod.Get, request.Method);
         }
-        [Fact]
+		[Fact]
+		public void CreateGetRequestWithHeader()
+		{
+			var request = Request.Get(uri, HeadersFactory.Create(
+				new[] { headerKey }, 
+				new[] { headerValue }));
+			Assert.Equal(HttpMethod.Get, request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+		[Fact]
         public void CreateHeadRequest()
         {
             var request = Request.Head(uri);
             Assert.Equal(HttpMethod.Head, request.Method);
         }
-        [Fact]
+		[Fact]
+		public void CreateHeadRequestWithHeader()
+		{
+			var request = Request.Head(uri, HeadersFactory.Create(
+				new[] { headerKey },
+				new[] { headerValue }));
+			Assert.Equal(HttpMethod.Head, request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+		[Fact]
         public void CreateDeleteRequest()
         {
             var request = Request.Delete(uri);
             Assert.Equal(HttpMethod.Delete, request.Method);
         }
-        [Fact]
+		[Fact]
+		public void CreateDeleteRequestWithHeader()
+		{
+			var request = Request.Delete(uri, HeadersFactory.Create(
+				new[] { headerKey }, 
+				new[] { headerValue }));
+			Assert.Equal(HttpMethod.Delete, request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+		[Fact]
         public void CreatePostRequest()
         {
             var request = Request.Post(uri, new {});
             Assert.Equal(HttpMethod.Post, request.Method);
         }
-        [Fact]
+		[Fact]
+		public void CreatePostRequestWithHeader()
+		{
+			var request = Request.Post(uri, new { }, HeadersFactory.Create(
+				new string[] { headerKey },
+				new string[] { headerValue }));
+			Assert.Equal(HttpMethod.Post, request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+		[Fact]
         public void CreatePutRequest()
         {
             var request = Request.Put(uri, new {});
             Assert.Equal(HttpMethod.Put, request.Method);
         }
-        [Fact]
+		[Fact]
+		public void CreatePutRequestWithHeader()
+		{
+			var request = Request.Put(uri, new { }, HeadersFactory.Create(
+				new[] { headerKey },
+				new[] { headerValue }));
+			Assert.Equal(HttpMethod.Put, request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+		[Fact]
         public void CreatePatchRequest()
         {
             var request = Request.Patch(uri, new {});
             Assert.Equal(new HttpMethod("PATCH"), request.Method);
         }
-        [Fact]
+		[Fact]
+		public void CreatePatchRequestWithHeader()
+		{
+			var request = Request.Patch(uri, new { }, HeadersFactory.Create(
+				new[] { headerKey },
+				new[] { headerValue }));
+			Assert.Equal(new HttpMethod("PATCH"), request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+		[Fact]
         public void BatchRequest()
         {
             var message = new BatchRequest(batchUri)
@@ -109,5 +165,17 @@ namespace ODataHttpClient.Tests
             Assert.Equal("1", req1.Headers.GetValues("Content-ID")?.FirstOrDefault());
             Assert.Equal("2", req2.Headers.GetValues("Content-ID")?.FirstOrDefault());
         }
-    }
+        [Fact]
+		public void CreateRequestWithHeaderByFactory()
+		{
+			var body = "text";
+			var request = new RequestFactory()
+				.Create(HttpMethod.Get, uri,
+					body, HeadersFactory.Create(
+						new[] { headerKey },
+						new[] { headerValue }), null);
+			Assert.Equal(HttpMethod.Get, request.Method);
+			Assert.True(request.Headers.Contains(headerKey));
+		}
+	}
 }

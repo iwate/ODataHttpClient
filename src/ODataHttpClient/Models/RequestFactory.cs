@@ -3,6 +3,7 @@ using ODataHttpClient.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace ODataHttpClient.Models
 {
@@ -20,7 +21,15 @@ namespace ODataHttpClient.Models
             => Request.Create<T>(method, uri, body, additionals, JsonSerializer);
         public Request Create<T>(HttpMethod method, string uri, T body, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY)
             => Request.Create<T>(method, uri, body, type, typeKey, JsonSerializer);
-
+        public Request Create<T>(HttpMethod method, string uri, T body, HttpRequestHeaders headers, IEnumerable<KeyValuePair<string, object>> additionals)
+            => Request.Create<T>(method, uri, body, additionals, JsonSerializer, headers);
+        public Request Create<T>(HttpMethod method, string uri, T body, HttpRequestHeaders headers, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY)
+            => Request.Create<T>(method, uri, body, type, typeKey, JsonSerializer, headers);
+        public Request Create<T>(HttpMethod method, string uri, T body, IDictionary<string, string> headers, IEnumerable<KeyValuePair<string, object>> additionals)
+            => Request.Create<T>(method, uri, body, additionals, JsonSerializer, HeadersFactory.Create(headers));
+        public Request Create<T>(HttpMethod method, string uri, T body, IDictionary<string, string> headers, string type = null, string typeKey = Request.DEFAULT_TYPE_KEY)
+            => Request.Create<T>(method, uri, body, type, typeKey, JsonSerializer, HeadersFactory.Create(headers));
+     
         public Request Get(string uri) 
             => Request.Get(uri);
         

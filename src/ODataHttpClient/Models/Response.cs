@@ -2,6 +2,7 @@ using ODataHttpClient.Serializers;
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace ODataHttpClient.Models
@@ -15,7 +16,9 @@ namespace ODataHttpClient.Models
         public string ErrorMessage { get; private set; }
         public byte[] Binary { get; private set; }
         public string Body { get => Binary != null ? Encoding.UTF8.GetString(Binary) : null; }
-        private Response(){}
+		public HttpResponseHeaders Headers { get; private set; }
+
+		private Response(){}
 
         public T ReadAs<T>(string jsonPath = null)
         {
@@ -77,30 +80,30 @@ namespace ODataHttpClient.Models
             throw new NotSupportedException();
         }
 
-        public static Response CreateError(HttpStatusCode code, byte[] body)
+        public static Response CreateError(HttpStatusCode code, byte[] body, HttpResponseHeaders headers)
         {
-            return CreateError(code, body != null ? Encoding.UTF8.GetString(body) : null);
+            return CreateError(code, body != null ? Encoding.UTF8.GetString(body) : null, headers);
         }
-        public static Response CreateError(HttpStatusCode code, string message)
+        public static Response CreateError(HttpStatusCode code, string message, HttpResponseHeaders headers)
         {
-            return new Response { Success = false, StatusCode = code, ErrorMessage = message };
+            return new Response { Success = false, StatusCode = code, ErrorMessage = message, Headers = headers };
         }
 
-        public static Response CreateSuccess(HttpStatusCode code, string mime, string body)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, HttpResponseHeaders headers = null)
         {
-            return CreateSuccess(code, mime, body, JsonSerializer.Default);
+            return CreateSuccess(code, mime, body, JsonSerializer.Default, headers);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, HttpResponseHeaders headers = null)
         {
-            return CreateSuccess(code, mime, body, JsonSerializer.Default);
+            return CreateSuccess(code, mime, body, JsonSerializer.Default, headers);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, IJsonSerializer serializer)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, string body, IJsonSerializer serializer, HttpResponseHeaders headers)
         {
-            return CreateSuccess(code, mime, body != null ? Encoding.UTF8.GetBytes(body) : null, serializer);
+            return CreateSuccess(code, mime, body != null ? Encoding.UTF8.GetBytes(body) : null, serializer, headers);
         }
-        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, IJsonSerializer serializer)
+        public static Response CreateSuccess(HttpStatusCode code, string mime, byte[] body, IJsonSerializer serializer, HttpResponseHeaders headers)
         {
-            return new Response { Success = true, StatusCode = code, MediaType = mime, Binary = body, _serializer = serializer };
+            return new Response { Success = true, StatusCode = code, MediaType = mime, Binary = body, _serializer = serializer, Headers = headers };
         }
-    }
+	}
 }

@@ -10,6 +10,7 @@ namespace ODataHttpClient.Models
     {
         public string Uri { get; }
         public ICollection<Request> Requests { get; set; } 
+        public HttpRequestHeaders Headers { get; private set; }
         public BatchRequest(string uri)
         {
             Uri = uri;
@@ -63,7 +64,7 @@ namespace ODataHttpClient.Models
         {
             var message = new HttpRequestMessage(HttpMethod.Post, Uri)
             {
-                Content = CreateContent(),
+                Content = CreateContent()
             };
 
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
