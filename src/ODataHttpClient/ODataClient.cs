@@ -82,7 +82,6 @@ namespace ODataHttpClient
         public async Task<Response> SendAsync(IRequest request)
         {
             var message = request.CreateMessage();
-            SetUpHeaders(request as Request, message);
             _credentialBuilder?.Build(_httpClient, message);
 
             var response = await _httpClient.SendAsync(message);
@@ -97,7 +96,6 @@ namespace ODataHttpClient
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
-            SetUpHeaders(request as BatchRequest, message);
 
             var response = await _httpClient.SendAsync(message);
 
@@ -112,23 +110,6 @@ namespace ODataHttpClient
         {
             JsonSerializer.Default = JsonSerializer.General;
             Request.Parameterizer = new ODataV4Parameterizer();
-        }
-        
-        private static void SetUpHeaders(Request request, HttpRequestMessage message)
-        {
-            if (request?.Headers == null)
-            {
-                return;
-            }
-            foreach (var header in  request.Headers) message.Headers.Add(header.Key, header.Value);
-        }
-        private static void SetUpHeaders(BatchRequest request, HttpRequestMessage message)
-        {
-            if (request?.Headers == null)
-            {
-                return;
-            }
-            foreach (var header in  request.Headers) message.Headers.Add(header.Key, header.Value);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ODataHttpClient.Models
     public class BatchRequest : IBatchRequest
     {
         public string Uri { get; }
-        public ICollection<Request> Requests { get; set; } 
+        public ICollection<Request> Requests { get; set; }
         public IReadOnlyDictionary<string, string> Headers { get; private set; }
         public BatchRequest(string uri)
         {
@@ -19,7 +19,8 @@ namespace ODataHttpClient.Models
 
         protected HttpContent CreateContent()
         {
-            HttpMessageContent create(IRequest req, int index) {
+            HttpMessageContent create(IRequest req, int index)
+            {
                 var message = req.CreateMessage();
                 message.Headers.Add("Content-ID", $"{index + 1}");
                 var content = new HttpMessageContent(message);
@@ -30,7 +31,7 @@ namespace ODataHttpClient.Models
 
             MultipartContent batch = new MultipartContent("mixed", "batch" + Guid.NewGuid());
             MultipartContent changeset = null;
-            foreach((var req, int index) in Requests.Select((req, index) => (req, index)))
+            foreach ((var req, int index) in Requests.Select((req, index) => (req, index)))
             {
                 if (req.Method == HttpMethod.Get || req.Method == HttpMethod.Head)
                 {
@@ -43,14 +44,14 @@ namespace ODataHttpClient.Models
                 }
                 else
                 {
-                    if (changeset == null) 
+                    if (changeset == null)
                     {
                         changeset = new MultipartContent("mixed", "changeset" + Guid.NewGuid());
                     }
                     changeset.Add(create(req, index));
                 }
             }
-            
+
             if (changeset != null)
             {
                 batch.Add(changeset);
@@ -70,6 +71,12 @@ namespace ODataHttpClient.Models
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            if (Headers != null)
+            {
+                foreach (var pair in Headers)
+                    message.Headers.Add(pair.Key, pair.Value);
+            }
+            
             return message;
         }
     }

@@ -29,6 +29,12 @@ namespace ODataHttpClient.Models
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
 
+            if (Headers != null)
+            {
+                foreach (var pair in Headers)
+                    message.Headers.Add(pair.Key, pair.Value);
+            }
+
             if (Body != null)
                 message.Content = new StringContent(Body, Encoding.UTF8, MediaType);
 
