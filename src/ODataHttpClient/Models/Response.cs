@@ -16,9 +16,9 @@ namespace ODataHttpClient.Models
         public string ErrorMessage { get; private set; }
         public byte[] Binary { get; private set; }
         public string Body { get => Binary != null ? Encoding.UTF8.GetString(Binary) : null; }
-		public HttpResponseHeaders Headers { get; private set; }
+        public HttpResponseHeaders Headers { get; private set; }
 
-		private Response(){}
+        private Response() { }
 
         public T ReadAs<T>(string jsonPath = null)
         {
@@ -105,5 +105,5 @@ namespace ODataHttpClient.Models
         {
             return new Response { Success = true, StatusCode = code, MediaType = mime, Binary = body, _serializer = serializer, Headers = headers };
         }
-	}
+    }
 }
