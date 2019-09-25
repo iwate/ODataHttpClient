@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,6 +13,8 @@ namespace ODataHttpClient.Tests
         const string batchUri = "http://services.odata.org/V3/OData/OData.svc/$batch";
 		const string headerKey = "If-Match";
 		const string headerValue = "*";
+        static IReadOnlyDictionary<string, string>  headers = new Dictionary<string, string> { [headerKey] = headerValue };
+
 		[Fact]
         public void NonBodyRequest()
         {
@@ -50,11 +53,9 @@ namespace ODataHttpClient.Tests
 		[Fact]
 		public void CreateGetRequestWithHeader()
 		{
-			var request = Request.Get(uri, HeadersFactory.Create(
-				new[] { headerKey }, 
-				new[] { headerValue }));
+			var request = Request.Get(uri, headers);
 			Assert.Equal(HttpMethod.Get, request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
         public void CreateHeadRequest()
@@ -65,11 +66,9 @@ namespace ODataHttpClient.Tests
 		[Fact]
 		public void CreateHeadRequestWithHeader()
 		{
-			var request = Request.Head(uri, HeadersFactory.Create(
-				new[] { headerKey },
-				new[] { headerValue }));
+			var request = Request.Head(uri, headers);
 			Assert.Equal(HttpMethod.Head, request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
         public void CreateDeleteRequest()
@@ -80,11 +79,9 @@ namespace ODataHttpClient.Tests
 		[Fact]
 		public void CreateDeleteRequestWithHeader()
 		{
-			var request = Request.Delete(uri, HeadersFactory.Create(
-				new[] { headerKey }, 
-				new[] { headerValue }));
+			var request = Request.Delete(uri, headers);
 			Assert.Equal(HttpMethod.Delete, request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
         public void CreatePostRequest()
@@ -95,11 +92,9 @@ namespace ODataHttpClient.Tests
 		[Fact]
 		public void CreatePostRequestWithHeader()
 		{
-			var request = Request.Post(uri, new { }, HeadersFactory.Create(
-				new string[] { headerKey },
-				new string[] { headerValue }));
+			var request = Request.Post(uri, new { }, headers);
 			Assert.Equal(HttpMethod.Post, request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
         public void CreatePutRequest()
@@ -110,11 +105,9 @@ namespace ODataHttpClient.Tests
 		[Fact]
 		public void CreatePutRequestWithHeader()
 		{
-			var request = Request.Put(uri, new { }, HeadersFactory.Create(
-				new[] { headerKey },
-				new[] { headerValue }));
+			var request = Request.Put(uri, new { }, headers);
 			Assert.Equal(HttpMethod.Put, request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
         public void CreatePatchRequest()
@@ -125,11 +118,9 @@ namespace ODataHttpClient.Tests
 		[Fact]
 		public void CreatePatchRequestWithHeader()
 		{
-			var request = Request.Patch(uri, new { }, HeadersFactory.Create(
-				new[] { headerKey },
-				new[] { headerValue }));
+			var request = Request.Patch(uri, new { }, headers);
 			Assert.Equal(new HttpMethod("PATCH"), request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
         public void BatchRequest()
@@ -171,11 +162,9 @@ namespace ODataHttpClient.Tests
 			var body = "text";
 			var request = new RequestFactory()
 				.Create(HttpMethod.Get, uri,
-					body, HeadersFactory.Create(
-						new[] { headerKey },
-						new[] { headerValue }), null);
+					body, headers, null);
 			Assert.Equal(HttpMethod.Get, request.Method);
-			Assert.True(request.Headers.Contains(headerKey));
+			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 	}
 }

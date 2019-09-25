@@ -10,7 +10,7 @@ namespace ODataHttpClient.Models
     {
         public string Uri { get; }
         public ICollection<Request> Requests { get; set; } 
-        public HttpRequestHeaders Headers { get; private set; }
+        public IReadOnlyDictionary<string, string> Headers { get; private set; }
         public BatchRequest(string uri)
         {
             Uri = uri;
