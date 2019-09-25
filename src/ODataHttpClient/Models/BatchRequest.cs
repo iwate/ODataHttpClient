@@ -68,6 +68,7 @@ namespace ODataHttpClient.Models
             };
 
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/mixed"));
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             return message;
         }

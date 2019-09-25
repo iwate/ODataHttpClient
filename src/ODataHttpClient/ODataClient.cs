@@ -96,7 +96,6 @@ namespace ODataHttpClient
         public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request)
         {
             var message = request.CreateMessage();
-            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _credentialBuilder?.Build(_httpClient, message);
             SetUpHeaders(request as BatchRequest, message);
 
