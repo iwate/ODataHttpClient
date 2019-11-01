@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using ODataHttpClient.Models;
 using ODataHttpClient.Serializers;
 using Xunit;
@@ -128,7 +129,16 @@ namespace ODataHttpClient.Tests
                 Assert.Equal(3, stream.ReadByte());
                 Assert.Equal(4, stream.ReadByte());
             }
-               
+        }
+
+        [Fact]
+        public void ReadBOMTextAsInt()
+        {
+            var body = Encoding.UTF8.GetPreamble().Concat(Encoding.UTF8.GetBytes("100")).ToArray();
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", body);
+
+            Assert.Equal(100, response.ReadAs<int>());
+            Assert.Equal(100, response.ReadAs<int?>());
         }
     }
 }

@@ -1,6 +1,7 @@
 using ODataHttpClient.Serializers;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,7 +16,7 @@ namespace ODataHttpClient.Models
         public string MediaType { get; private set; }
         public string ErrorMessage { get; private set; }
         public byte[] Binary { get; private set; }
-        public string Body { get => Binary != null ? Encoding.UTF8.GetString(Binary) : null; }
+        public string Body { get => GetStringFromUTF8(Binary); }
         public HttpResponseHeaders Headers { get; private set; }
 
         private Response() { }
@@ -80,9 +81,27 @@ namespace ODataHttpClient.Models
             throw new NotSupportedException();
         }
 
+        private static readonly byte[] _utf8Preamble = Encoding.UTF8.GetPreamble();
+        private static bool IsUTF8WithBOM(byte[] binary) => binary.Take(_utf8Preamble.Length).SequenceEqual(_utf8Preamble);
+        private static (int start, int len) GetUTF8StartAndLength(byte[] binary) 
+        {
+            if (IsUTF8WithBOM(binary))
+                return (_utf8Preamble.Length, binary.Length - _utf8Preamble.Length);
+                
+            return (0, binary.Length);
+        } 
+        public static string GetStringFromUTF8(byte[] binary) 
+        {
+            if (binary == null)
+                return null;
+            
+            var (start, len) = GetUTF8StartAndLength(binary);
+            return Encoding.UTF8.GetString(binary, start, len);
+        }
+
         public static Response CreateError(HttpStatusCode code, byte[] body, HttpResponseHeaders headers)
         {
-            return CreateError(code, body != null ? Encoding.UTF8.GetString(body) : null, headers);
+            return CreateError(code, GetStringFromUTF8(body), headers);
         }
         public static Response CreateError(HttpStatusCode code, string message, HttpResponseHeaders headers)
         {
