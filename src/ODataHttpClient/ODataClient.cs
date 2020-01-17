@@ -55,7 +55,8 @@ namespace ODataHttpClient
             return Response.CreateSuccess(status, mime, body, headers);
         }
 
-		protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null)
+
+        protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -67,7 +68,7 @@ namespace ODataHttpClient
                     
                     var part = await content.ReadAsHttpResponseMessageAsync();
 
-                    result.Add(await ParseAsync(part.StatusCode, part.Content, headers));
+                    result.Add(await ParseAsync(part.StatusCode, part.Content, part.Headers));
                 }
                 else if (content.IsMimeMultipartContent())
                 {
