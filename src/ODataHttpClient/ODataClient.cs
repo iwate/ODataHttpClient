@@ -68,6 +68,12 @@ namespace ODataHttpClient
                     
                     var part = await content.ReadAsHttpResponseMessageAsync();
 
+                    if (!part.Headers.Contains("Content-ID") 
+                        && content.Headers.TryGetValues("Content-ID", out var contentId))
+                    {
+                        part.Headers.Add("Content-ID", contentId);
+                    }
+
                     result.Add(await ParseAsync(part.StatusCode, part.Content, part.Headers));
                 }
                 else if (content.IsMimeMultipartContent())
