@@ -57,7 +57,7 @@ namespace ODataHttpClient
         }
 
 
-        protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default)
+        protected async Task<IReadOnlyList<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -96,11 +96,11 @@ namespace ODataHttpClient
 
             return await ParseAsync(response.StatusCode, response.Content, response.Headers);
         }
-        public Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default)
+        public Task<IReadOnlyList<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default)
         {
             return BatchAsync(batchRequest, cancellationToken);
         }
-        public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Response>> BatchAsync(IBatchRequest request, CancellationToken cancellationToken = default)
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
