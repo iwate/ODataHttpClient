@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: CLSCompliant(true)]
@@ -56,7 +57,7 @@ namespace ODataHttpClient
         }
 
 
-        protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null)
+        protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -66,7 +67,7 @@ namespace ODataHttpClient
                     if (!content.Headers.ContentType.Parameters.Contains(_responseMsgType))
                         content.Headers.ContentType.Parameters.Add(_responseMsgType);
                     
-                    var part = await content.ReadAsHttpResponseMessageAsync();
+                    var part = await content.ReadAsHttpResponseMessageAsync(cancellationToken);
 
                     if (!part.Headers.Contains("Content-ID") 
                         && content.Headers.TryGetValues("Content-ID", out var contentId))
@@ -78,40 +79,40 @@ namespace ODataHttpClient
                 }
                 else if (content.IsMimeMultipartContent())
                 {
-                    var children = await content.ReadAsMultipartAsync();
+                    var children = await content.ReadAsMultipartAsync(cancellationToken);
 
-                    result.AddRange(await ParseMultiAsync(children, headers));
+                    result.AddRange(await ParseMultiAsync(children, headers, cancellationToken));
                 }
             }
             return result;
         }
 
-        public async Task<Response> SendAsync(IRequest request)
+        public async Task<Response> SendAsync(IRequest request, CancellationToken cancellationToken = default)
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
 
-            var response = await _httpClient.SendAsync(message);
-            
+            var response = await _httpClient.SendAsync(message, cancellationToken);
+
             return await ParseAsync(response.StatusCode, response.Content, response.Headers);
         }
-        public async Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest)
+        public Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default)
         {
-            return await BatchAsync(batchRequest);
+            return BatchAsync(batchRequest, cancellationToken);
         }
-        public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request)
+        public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request, CancellationToken cancellationToken = default)
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
 
-            var response = await _httpClient.SendAsync(message);
+            var response = await _httpClient.SendAsync(message, cancellationToken);
 
             if (!response.Content.IsMimeMultipartContent())
                 return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers) };
 
-            var multipart = await response.Content.ReadAsMultipartAsync();
+            var multipart = await response.Content.ReadAsMultipartAsync(cancellationToken);
 
-            return await ParseMultiAsync(multipart, response.Headers);
+            return await ParseMultiAsync(multipart, response.Headers, cancellationToken);
         }
         public static void UseV4Global()
         {
