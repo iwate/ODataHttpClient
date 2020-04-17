@@ -56,7 +56,7 @@ namespace ODataHttpClient
         }
 
 
-        protected async Task<IEnumerable<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null)
+        protected async Task<IReadOnlyList<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -95,11 +95,11 @@ namespace ODataHttpClient
             
             return await ParseAsync(response.StatusCode, response.Content, response.Headers);
         }
-        public async Task<IEnumerable<Response>> SendAsync(IBatchRequest batchRequest)
+        public async Task<IReadOnlyList<Response>> SendAsync(IBatchRequest batchRequest)
         {
             return await BatchAsync(batchRequest);
         }
-        public async Task<IEnumerable<Response>> BatchAsync(IBatchRequest request)
+        public async Task<IReadOnlyList<Response>> BatchAsync(IBatchRequest request)
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
