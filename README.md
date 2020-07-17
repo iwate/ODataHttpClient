@@ -130,3 +130,16 @@ If you change general json format, can select a way of three.
     var request = Request.Get("...", serializer); // pass serializer
     var response = await odata.SendAsync(request);
     var data = response.ReadAs<dynamic>(serializer); // pass serializer
+
+## NotFound(404)
+
+In default, ODataHttpClient decide 404 response code to success. If you change to error, can select a way of followings.
+
+### 1. Global level settings
+
+    ODataHttpClient.DefaultNotFoundIsSuccess = false;
+
+### 2. Instance level settings
+
+    var odata = new ODataHttpClient(httpClient) { NotFoundIsSuccess = false };
+
