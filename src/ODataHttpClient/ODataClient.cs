@@ -59,7 +59,7 @@ namespace ODataHttpClient
         }
 
 
-        protected async Task<IReadOnlyList<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default)
+        protected async Task<IReadOnlyList<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default, bool? notfoundIsSuccess = null)
         {
             var result = new List<Response>();
             foreach (var content in multipart.Contents)
@@ -77,32 +77,32 @@ namespace ODataHttpClient
                         part.Headers.Add("Content-ID", contentId);
                     }
 
-                    result.Add(await ParseAsync(part.StatusCode, part.Content, part.Headers, NotFoundIsSuccess));
+                    result.Add(await ParseAsync(part.StatusCode, part.Content, part.Headers, notfoundIsSuccess ?? NotFoundIsSuccess));
                 }
                 else if (content.IsMimeMultipartContent())
                 {
                     var children = await content.ReadAsMultipartAsync(cancellationToken);
 
-                    result.AddRange(await ParseMultiAsync(children, headers, cancellationToken));
+                    result.AddRange(await ParseMultiAsync(children, headers, cancellationToken, notfoundIsSuccess));
                 }
             }
             return result;
         }
 
-        public async Task<Response> SendAsync(IRequest request, CancellationToken cancellationToken = default)
+        public async Task<Response> SendAsync(IRequest request, CancellationToken cancellationToken = default, bool? notfoundIsSuccess = null)
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
 
             var response = await _httpClient.SendAsync(message, cancellationToken);
 
-            return await ParseAsync(response.StatusCode, response.Content, response.Headers, NotFoundIsSuccess);
+            return await ParseAsync(response.StatusCode, response.Content, response.Headers, notfoundIsSuccess ?? NotFoundIsSuccess);
         }
-        public Task<IReadOnlyList<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default)
+        public Task<IReadOnlyList<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default, bool? notfoundIsSuccess = null)
         {
-            return BatchAsync(batchRequest, cancellationToken);
+            return BatchAsync(batchRequest, cancellationToken, notfoundIsSuccess);
         }
-        public async Task<IReadOnlyList<Response>> BatchAsync(IBatchRequest request, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyList<Response>> BatchAsync(IBatchRequest request, CancellationToken cancellationToken = default, bool? notfoundIsSuccess = null)
         {
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
@@ -110,11 +110,11 @@ namespace ODataHttpClient
             var response = await _httpClient.SendAsync(message, cancellationToken);
 
             if (!response.Content.IsMimeMultipartContent())
-                return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers, NotFoundIsSuccess) };
+                return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers, notfoundIsSuccess ?? NotFoundIsSuccess) };
 
             var multipart = await response.Content.ReadAsMultipartAsync(cancellationToken);
 
-            return await ParseMultiAsync(multipart, response.Headers, cancellationToken);
+            return await ParseMultiAsync(multipart, response.Headers, cancellationToken, notfoundIsSuccess);
         }
         public static void UseV4Global()
         {
