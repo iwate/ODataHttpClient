@@ -89,7 +89,8 @@ namespace ODataHttpClient.Tests
             var changed = await odata.SendAsync(Request.Patch(uri, patch, type: "ODataDemo.Product"));
 
             Assert.True(changed.Success);
-            
+            Assert.Null(changed.ReadAs<object>());
+
             var lookuped = await odata.SendAsync(Request.Get($"{uri}/Name/$value"));
 
             Assert.True(lookuped.Success);

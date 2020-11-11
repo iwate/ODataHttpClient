@@ -54,7 +54,10 @@ namespace ODataHttpClient
             
             if (code >= 400)
                 return Response.CreateError(status, body, headers);
-            
+
+            if (code == 204)
+                body = null;
+
             return Response.CreateSuccess(status, mime, body, headers);
         }
 

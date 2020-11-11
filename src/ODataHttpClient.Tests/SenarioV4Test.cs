@@ -88,7 +88,8 @@ namespace ODataHttpClient.Tests
             var changed = await odata.SendAsync(Request.Patch(uri, patch, type: "ODataDemo.Product", typeKey: "@odata.type"));
 
             Assert.True(changed.Success);
-            
+            Assert.Null(changed.ReadAs<object>());
+
             var lookuped = await odata.SendAsync(Request.Get($"{uri}/Name/$value"));
 
             Assert.True(lookuped.Success);
@@ -97,6 +98,7 @@ namespace ODataHttpClient.Tests
 
             Assert.NotEqual(name, replacedName);
             Assert.Equal(patch.Name, replacedName);
+
         }
         [Fact]
         public async Task CreateProductWithCategory()
