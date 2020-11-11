@@ -143,3 +143,6 @@ In default, ODataHttpClient decide 404 response code to success. If you change t
 
     var odata = new ODataHttpClient(httpClient) { NotFoundIsSuccess = false };
 
+### 3. Request level settings
+
+    var response = await odata.SendAsync(request, notfoundIsSuccess: false);
