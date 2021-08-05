@@ -7,6 +7,25 @@ namespace ODataHttpClient.Tests
     public class ParameterizeV4Test
     {
         [Fact]
+        public void BoolParam()
+        {
+            var odata = new ODataParameterizer();
+            var query = odata.Parameterize("$filter=True eq @True and False eq @False", new { True = true, False = false });
+
+            Assert.Equal("$filter=True eq true and False eq false", query);
+        }
+
+        [Fact]
+        [UseCulture("de-DE")]
+        public void BoolParamGeDE()
+        {
+            var odata = new ODataParameterizer();
+            var query = odata.Parameterize("$filter=True eq @True and False eq @False", new { True = true, False = false });
+
+            Assert.Equal("$filter=True eq true and False eq false", query);
+        }
+
+        [Fact]
         public void LongParam()
         {
             var odata = new ODataV4Parameterizer();
