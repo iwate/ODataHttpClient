@@ -75,6 +75,14 @@ namespace ODataHttpClient.Tests
             Assert.Equal(100L, response.ReadAs<long?>());
         }
         [Fact]
+        public void ReadTextAsFloat()
+        {
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100.0");
+
+            Assert.Equal(100f, response.ReadAs<float>());
+            Assert.Equal(100f, response.ReadAs<float?>());
+        }
+        [Fact]
         public void ReadTextAsDouble()
         {
             var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100.0");
@@ -87,6 +95,33 @@ namespace ODataHttpClient.Tests
         {
             var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100.0");
             
+            Assert.Equal(100m, response.ReadAs<decimal>());
+            Assert.Equal(100m, response.ReadAs<decimal?>());
+        }
+        [Fact]
+        [UseCulture("it-IT")]
+        public void ReadTextAsFloatItIT()
+        {
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100.0");
+
+            Assert.Equal(100f, response.ReadAs<float>());
+            Assert.Equal(100f, response.ReadAs<float?>());
+        }
+        [Fact]
+        [UseCulture("it-IT")]
+        public void ReadTextAsDoubleItIT()
+        {
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100.0");
+
+            Assert.Equal(100d, response.ReadAs<double>());
+            Assert.Equal(100d, response.ReadAs<double?>());
+        }
+        [Fact]
+        [UseCulture("it-IT")]
+        public void ReadTextAsDecimalItIT()
+        {
+            var response = Response.CreateSuccess(HttpStatusCode.OK, "text/plain", "100.0");
+
             Assert.Equal(100m, response.ReadAs<decimal>());
             Assert.Equal(100m, response.ReadAs<decimal?>());
         }

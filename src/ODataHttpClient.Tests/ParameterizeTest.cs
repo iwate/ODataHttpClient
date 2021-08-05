@@ -103,6 +103,21 @@ namespace ODataHttpClient.Tests
         }
 
         [Fact]
+        [UseCulture("it-IT")]
+        public void TimeSpanParamItIT()
+        {
+            var odata = new ODataParameterizer();
+
+            Assert.Equal("$filter=Value eq time'P30D'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromDays(30) }));
+            Assert.Equal("$filter=Value eq time'PT1H'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) }));
+            Assert.Equal("$filter=Value eq time'PT15M'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMinutes(15) }));
+            Assert.Equal("$filter=Value eq time'PT1S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromSeconds(1) }));
+            Assert.Equal("$filter=Value eq time'PT0.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(500) }));
+            Assert.Equal("$filter=Value eq time'PT1.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(1500) }));
+            Assert.Equal("$filter=Value eq time'PT0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = default(TimeSpan) }));
+        }
+
+        [Fact]
         public void DateTimeParam()
         {
             var odata = new ODataParameterizer();

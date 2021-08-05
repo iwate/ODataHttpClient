@@ -45,6 +45,53 @@ namespace ODataHttpClient.Tests
             Assert.True(message.Content.Headers.ContentType.MediaType == "application/json");
         }
         [Fact]
+        public void ContentTypePlainText()
+        {
+            var message = Request.Create(HttpMethod.Post, uri, "Hello, World!").CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("Hello, World!", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 100).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("100", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 1.23f).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 1.23d).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 1.23m).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+        }
+        [Fact]
+        [UseCulture("it-IT")]
+        public void ContentTypePlainTextItIT()
+        {
+            var message = Request.Create(HttpMethod.Post, uri, "Hello, World!").CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("Hello, World!", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 100).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("100", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 1.23f).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 1.23d).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+
+            message = Request.Create(HttpMethod.Post, uri, 1.23m).CreateMessage();
+            Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
+            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+        }
+        [Fact]
         public void CreateGetRequest()
         {
             var request = Request.Get(uri);
