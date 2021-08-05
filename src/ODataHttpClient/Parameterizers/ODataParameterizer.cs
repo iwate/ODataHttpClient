@@ -30,6 +30,7 @@ namespace ODataHttpClient.Parameterizers
 
             switch (value)
             {
+                case bool val: return Literal(val);
                 case long val: return Literal(val);
                 case float val: return Literal(val);
                 case double val: return Literal(val);
@@ -43,6 +44,8 @@ namespace ODataHttpClient.Parameterizers
                 default: return value.ToString();
             }
         }
+
+        private string Literal(bool value) => value ? "true" : "false";
 
         private string Literal(long value) => $"{value}L";
 
