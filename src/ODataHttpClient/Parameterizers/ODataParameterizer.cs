@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using static System.FormattableString;
 
 namespace ODataHttpClient.Parameterizers
 {
@@ -49,11 +50,11 @@ namespace ODataHttpClient.Parameterizers
 
         private string Literal(long value) => $"{value}L";
 
-        private string Literal(float value) => $"{value}f";
+        private string Literal(float value) => Invariant($"{value}f");
 
-        private string Literal(double value) => $"{value}d";
+        private string Literal(double value) => Invariant($"{value}d");
 
-        private string Literal(decimal value) => $"{value}M";
+        private string Literal(decimal value) => Invariant($"{value}M");
 
         private string Literal(byte[] value) => $"binary'{String.Join("", value.Select(b => b.ToString("X2")))}'";
 
@@ -70,7 +71,7 @@ namespace ODataHttpClient.Parameterizers
                     "T", 
                     $"{value.Hours}H", 
                     $"{value.Minutes}M", 
-                    $"{(value.Seconds + (double)value.Milliseconds / 1000)}S" 
+                    Invariant($"{(value.Seconds + (double)value.Milliseconds / 1000)}S")
                 }.Where(v => v.Length != 2 || v[0] != '0'));
                 
 	        duration = duration == "PT" ? "PT0S" : duration[duration.Length-1] == 'T' ? duration.Substring(0,duration.Length-1) : duration;
