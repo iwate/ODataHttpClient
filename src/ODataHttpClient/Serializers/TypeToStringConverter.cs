@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using static System.FormattableString;
 
 namespace ODataHttpClient.Serializers
 {
@@ -20,7 +21,7 @@ namespace ODataHttpClient.Serializers
 
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
-            serializer.Serialize(writer, value?.ToString());
+            serializer.Serialize(writer, Invariant($"{value}"));
         }
     }
 }
