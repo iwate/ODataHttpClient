@@ -3,6 +3,7 @@ using ODataHttpClient.Parameterizers;
 using ODataHttpClient.Serializers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -73,9 +74,9 @@ namespace ODataHttpClient.Models
 
             var type = typeof(T);
 
-            if (type.IsValueType || type == stringType)
+            if (type == stringType || type.IsValueType)
             {
-                content = body.ToString();
+                content = Convert.ToString(body, CultureInfo.InvariantCulture);
                 mime = "text/plain";
             }
             else
