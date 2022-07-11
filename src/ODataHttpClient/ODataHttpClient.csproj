@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <AssemblyName>ODataHttpClient</AssemblyName>
-    <Version>1.7.1</Version>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <NuspecFile>ODataHttpClient.nuspec</NuspecFile>
+    <Authors>Commerble</Authors>
+    <PackageProjectUrl>https://github.com/iwate/ODataHttpClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

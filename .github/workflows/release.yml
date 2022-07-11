@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Build projects
+      working-directory: src
+      run: dotnet build
+
+    - name: Run unit tests
+      working-directory: src
+      run: dotnet test
+
+    - name: Pack package
+      working-directory: src/ODataHttpClient
+      run: dotnet pack -c Release -p:Version=${{github.event.release.tag_name}} -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+
+    - name: Publish package to NuGet.org
+      working-directory: src/ODataHttpClient/bin/Release/
+      run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_TOKEN }}
