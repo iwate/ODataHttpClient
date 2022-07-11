@@ -17,6 +17,7 @@ jobs:
         run: |
           v=$(curl 'https://azuresearch-usnc.nuget.org/query?q=Microsoft.AspNet.WebApi.Client' | jq -r '.data[] | select(.id == "Microsoft.AspNet.WebApi.Client") | .version')
           sed -r "s/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"\[(.*),(.*)\]\"/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"[\1,$v]\"/g" src/ODataHttpClient/ODataHttpClient.csproj > src/ODataHttpClient/ODataHttpClient.csproj
+          cat src/ODataHttpClient/ODataHttpClient.csproj
           pr_title="Microsoft.AspNet.Web.ApiClient.$v"
           base_branch=master
           echo "::set-output name=diff::$(git diff --name-only | wc -l)"
@@ -39,6 +40,7 @@ jobs:
         run: |
           v=$(curl 'https://azuresearch-usnc.nuget.org/query?q=Newtonsoft.Json' | jq -r '.data[] | select(.id == "Newtonsoft.Json") | .version')
           sed -r "s/Include=\"Newtonsoft.Json\" Version=\"\[(.*),(.*)\]\"/Include=\"Newtonsoft.Json\" Version=\"[\1,$v]\"/g" src/ODataHttpClient/ODataHttpClient.csproj > src/ODataHttpClient/ODataHttpClient.csproj
+          cat src/ODataHttpClient/ODataHttpClient.csproj
           pr_title="Newtonsoft.Json.$v"
           base_branch=master
           echo "::set-output name=diff::$(git diff --name-only | wc -l)"
