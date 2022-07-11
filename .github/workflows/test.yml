@@ -1,0 +1,38 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/test.yml'
+  pull_request:
+    types:
+      - opened
+      - reopened
+    paths:
+      - 'src/**'
+      - '.github/workflows/test.yml'
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        dotnet: [6.0.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+
+      - name: Build projects
+        working-directory: ./src/
+        run: dotnet build
+
+      - name: Run unit tests
+        working-directory: ./src/
+        run: dotnet test
