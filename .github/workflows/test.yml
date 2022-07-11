@@ -35,6 +35,7 @@ jobs:
 
       - name: Run unit tests
         working-directory: ./src/ODataHttpClient.Tests
+        shell: bash
         run: |
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
           bash <(curl -s https://codecov.io/bash)
