@@ -17,7 +17,6 @@ jobs:
         run: |
           v=$(curl 'https://azuresearch-usnc.nuget.org/query?q=Microsoft.AspNet.WebApi.Client' | jq -r '.data[] | select(.id == "Microsoft.AspNet.WebApi.Client") | .version')
           sed -r "s/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"\[(.*),(.*)\]\"/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"[\1,$v]\"/g" src/ODataHttpClient/ODataHttpClient.csproj > src/ODataHttpClient/ODataHttpClient.csproj
-          cat src/ODataHttpClient/ODataHttpClient.csproj
           pr_title="Microsoft.AspNet.Web.ApiClient.$v"
           base_branch=master
           echo "::set-output name=diff::$(git diff --name-only | wc -l)"
@@ -25,7 +24,7 @@ jobs:
           echo "::set-output name=pr_title::$pr_title"
           echo "::set-output name=base_branch::$base_branch"
       - name: Create release pr
-        if: ${{ steps.check_pr.outputs.count == 0 && steps.check_pr.outputs.diff > 0 }}
+        if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
         run: |
           gh pr create -B ${{ steps.check_pr.outputs.base_branch }} -t ${{ steps.check_pr.outputs.pr_title }} -b ""
   NewtonsoftJson:
@@ -40,7 +39,6 @@ jobs:
         run: |
           v=$(curl 'https://azuresearch-usnc.nuget.org/query?q=Newtonsoft.Json' | jq -r '.data[] | select(.id == "Newtonsoft.Json") | .version')
           sed -r "s/Include=\"Newtonsoft.Json\" Version=\"\[(.*),(.*)\]\"/Include=\"Newtonsoft.Json\" Version=\"[\1,$v]\"/g" src/ODataHttpClient/ODataHttpClient.csproj > src/ODataHttpClient/ODataHttpClient.csproj
-          cat src/ODataHttpClient/ODataHttpClient.csproj
           pr_title="Newtonsoft.Json.$v"
           base_branch=master
           echo "::set-output name=diff::$(git diff --name-only | wc -l)"
@@ -48,6 +46,6 @@ jobs:
           echo "::set-output name=pr_title::$pr_title"
           echo "::set-output name=base_branch::$base_branch"
       - name: Create release pr
-        if: ${{ steps.check_pr.outputs.count == 0 && steps.check_pr.outputs.diff > 0 }}
+        if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
         run: |
           gh pr create -B ${{ steps.check_pr.outputs.base_branch }} -t ${{ steps.check_pr.outputs.pr_title }} -b ""
