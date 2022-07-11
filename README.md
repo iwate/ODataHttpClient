@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/iwate/ODataHttpClient/tree/master.svg?style=svg)](https://circleci.com/gh/iwate/ODataHttpClient/tree/master)
+[![Test](https://github.com/iwate/ODataHttpClient/actions/workflows/test.yml/badge.svg)](https://github.com/iwate/ODataHttpClient/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/iwate/ODataHttpClient/branch/master/graph/badge.svg)](https://codecov.io/gh/iwate/ODataHttpClient)
 [![NuGet version](https://badge.fury.io/nu/ODataHttpClient.svg)](https://badge.fury.io/nu/ODataHttpClient)
 
