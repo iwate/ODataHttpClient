@@ -25,6 +25,8 @@ jobs:
           echo "::set-output name=base_branch::$base_branch"
       - name: Create release pr
         if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
   NewtonsoftJson:
@@ -47,5 +49,7 @@ jobs:
           echo "::set-output name=base_branch::$base_branch"
       - name: Create release pr
         if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
