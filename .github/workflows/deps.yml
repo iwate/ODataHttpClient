@@ -26,7 +26,7 @@ jobs:
       - name: Create release pr
         if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
         run: |
-          gh pr create -B ${{ steps.check_pr.outputs.base_branch }} -t ${{ steps.check_pr.outputs.pr_title }} -b ""
+          gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
   NewtonsoftJson:
     runs-on: ubuntu-latest
     steps:
@@ -48,4 +48,4 @@ jobs:
       - name: Create release pr
         if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
         run: |
-          gh pr create -B ${{ steps.check_pr.outputs.base_branch }} -t ${{ steps.check_pr.outputs.pr_title }} -b ""
+          gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
