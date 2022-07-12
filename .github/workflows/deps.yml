@@ -2,7 +2,7 @@ name: Deps
 
 on:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron:  '32 * * * *'
 
 jobs:
   MicrosoftAspNetWebApiClient:
@@ -28,6 +28,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git checkout -b deps/${{ steps.check.outputs.pr_title }}
+          git commit -am "bumpup deps"
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
   NewtonsoftJson:
     runs-on: ubuntu-latest
@@ -52,4 +54,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git checkout -b deps/${{ steps.check.outputs.pr_title }}
+          git commit -am "bumpup deps"
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
