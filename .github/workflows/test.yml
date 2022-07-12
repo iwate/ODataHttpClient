@@ -10,9 +10,6 @@ on:
     types:
       - opened
       - reopened
-    paths:
-      - 'src/**'
-      - '.github/workflows/test.yml'
 jobs:
   test:
     runs-on: ${{ matrix.os }}
