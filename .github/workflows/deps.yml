@@ -24,7 +24,7 @@ jobs:
           echo "::set-output name=count::$(gh pr list -S ${pr_title}' in:title' -B $base_branch | wc -l)"
           echo "::set-output name=pr_title::$pr_title"
           echo "::set-output name=base_branch::$base_branch"
-      - name: Create release pr
+      - name: Push branch
         if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,6 +34,11 @@ jobs:
           git checkout -b deps/${{ steps.check.outputs.pr_title }}
           git commit -am "bumpup deps"
           git push origin deps/${{ steps.check.outputs.pr_title }}
+      - name: Create release pr
+        if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
+        env:
+          GH_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
+        run: |
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
   NewtonsoftJson:
     runs-on: ubuntu-latest
@@ -53,7 +58,7 @@ jobs:
           echo "::set-output name=count::$(gh pr list -S ${pr_title}' in:title' -B $base_branch | wc -l)"
           echo "::set-output name=pr_title::$pr_title"
           echo "::set-output name=base_branch::$base_branch"
-      - name: Create release pr
+      - name: Push branch
         if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,4 +68,9 @@ jobs:
           git checkout -b deps/${{ steps.check.outputs.pr_title }}
           git commit -am "bumpup deps"
           git push origin deps/${{ steps.check.outputs.pr_title }}
+      - name: Create release pr
+        if: ${{ steps.check.outputs.count == 0 && steps.check.outputs.diff > 0 }}
+        env:
+          GH_TOKEN: ${{ secrets.PR_GITHUB_TOKEN }}
+        run: |
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
