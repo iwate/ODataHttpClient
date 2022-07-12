@@ -33,6 +33,7 @@ jobs:
           git config user.email github-actions@github.com
           git checkout -b deps/${{ steps.check.outputs.pr_title }}
           git commit -am "bumpup deps"
+          git push
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
   NewtonsoftJson:
     runs-on: ubuntu-latest
@@ -61,4 +62,5 @@ jobs:
           git config user.email github-actions@github.com
           git checkout -b deps/${{ steps.check.outputs.pr_title }}
           git commit -am "bumpup deps"
+          git push
           gh pr create -B ${{ steps.check.outputs.base_branch }} -t ${{ steps.check.outputs.pr_title }} -b ""
