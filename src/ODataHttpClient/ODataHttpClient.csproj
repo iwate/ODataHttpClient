@@ -23,8 +23,8 @@ var response = await odata.SendAsync(request);
 
 if (response.Success) 
 {
-    var total = response.ReadAs<int>("$['odata.count']");
-    var products = response.ReadAs<IEnumerable<Product>>("$.value");
+    var total = response.ReadAs&lt;int&gt;("$['odata.count']");
+    var products = response.ReadAs&lt;IEnumerable&lt;Product&gt;&gt;("$.value");
 }
 ```
 
