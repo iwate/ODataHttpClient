@@ -17,7 +17,7 @@ jobs:
         id: check
         run: |
           v=$(curl 'https://azuresearch-usnc.nuget.org/query?q=Microsoft.AspNet.WebApi.Client' | jq -r '.data[] | select(.id == "Microsoft.AspNet.WebApi.Client") | .version')
-          sed -i -r "s/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"(.*)\"/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"$v\"/g" src/ODataHttpClient/ODataHttpClient.csproj
+          sed -i -r "s/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"\[(.*),(.*)\]\"/Include=\"Microsoft.AspNet.WebApi.Client\" Version=\"[\1,$v]\"/g" src/ODataHttpClient/ODataHttpClient.csproj
           pr_title="Microsoft.AspNet.Web.ApiClient.$v"
           base_branch=master
           echo "::set-output name=diff::$(git diff --name-only | wc -l)"
