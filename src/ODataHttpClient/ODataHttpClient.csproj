@@ -7,6 +7,30 @@
     <PackageProjectUrl>https://github.com/iwate/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Description>The simplest implementation of OData client.
+## Restrictions
+
+- Not support XML (JSON only)
+- Not support Query Builder
+
+## Usage
+
+``` 
+var client = new HttpClient();
+var odata = new ODataClient(client);
+var request = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
+var response = await odata.SendAsync(request);
+
+if (response.Success) 
+{
+    var total = response.ReadAs<int>("$['odata.count']");
+    var products = response.ReadAs<IEnumerable<Product>>("$.value");
+}
+```
+
+## More info
+[https://github.com/iwate/ODataHttpClient](https://github.com/iwate/ODataHttpClient)
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
