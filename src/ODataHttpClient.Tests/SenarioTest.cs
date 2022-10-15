@@ -148,5 +148,68 @@ namespace ODataHttpClient.Tests
 
             Assert.Null(product);
         }
+
+        
+        [Fact]
+        public async Task SuccessAtNotFoundByGet()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = -1 }));
+
+            Assert.True(response.Success);
+
+            var product = response.ReadAs<dynamic>();
+
+            Assert.Null(product);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByGetWithFlag()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = -1 }, false));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByPost()
+        {
+            var response = await odata.SendAsync(Request.Put($"{endpoint}/Product", new { }, new {}, type:"ODataDemo.Product"));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByPut()
+        {
+            var response = await odata.SendAsync(Request.Put($"{endpoint}/Products(@Id)", new { Id = -1 }, new {}, type:"ODataDemo.Product"));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByPatch()
+        {
+            var response = await odata.SendAsync(Request.Patch($"{endpoint}/Products(@Id)", new { Id = -1 }, new {}, type:"ODataDemo.Product"));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByDelete()
+        {
+            var response = await odata.SendAsync(Request.Delete($"{endpoint}/Products(@Id)", new { Id = -1 }));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
     }
 }

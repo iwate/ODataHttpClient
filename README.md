@@ -133,16 +133,12 @@ If you change general json format, can select a way of three.
 
 ## NotFound(404)
 
-In default, ODataHttpClient decide 404 response code to success. If you change to error, can select a way of followings.
+In default, ODataHttpClient decide 404 response code of GET and HEAD request to success. If you change to error, can select a way of followings.
 
-### 1. Global level settings
+```
+var request = Request.Get("...", acceptNotFound: false);
+var response = await odata.SendAsync(request);
+```
 
-    ODataHttpClient.DefaultNotFoundIsSuccess = false;
+When a response code of other HTTP methods, like as POST,PUT,PATCH and DELETE, is 404, ODataHttpClient set `Response.Success` false.
 
-### 2. Instance level settings
-
-    var odata = new ODataHttpClient(httpClient) { NotFoundIsSuccess = false };
-
-### 3. Request level settings
-
-    var response = await odata.SendAsync(request, notfoundIsSuccess: false);
