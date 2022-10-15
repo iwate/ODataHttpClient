@@ -20,12 +20,12 @@ The simplest implementation of OData client.
 
     var client = new HttpClient();
     var odata = new ODataClient(client);
-    var request = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
+    var request = Request.Get($"{endpoint}/Products?$count=true");
     var response = await odata.SendAsync(request);
 
     if (response.Success) 
     {
-        var total = response.ReadAs<int>("$['odata.count']");
+        var total = response.ReadAs<int>("$['@odata.count']");
         var products = response.ReadAs<IEnumerable<Product>>("$.value");
     }
 
@@ -41,9 +41,9 @@ The simplest implementation of OData client.
             { 
                 Name = "Sample"
             }),
-            Request.Post($"{endpoint}/$1/$links/Categories", new 
+            Request.Post($"{endpoint}/$1/Categories/$ref", new Dictionay<string, string>
             {
-                url = $"{endpoint}/Categories(0)"
+                ["@odata.id"] = $"{endpoint}/Categories(0)"
             })
         }
     };
@@ -80,12 +80,12 @@ In default, OData element type key is `odata.type`. If you want change key to ot
 
     Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")
 
-### Use for OData v4
-If you use for ODatav4, you have to change serializer and parametalizer.
+### Use for OData v3(v2)
+If you use for OData v3(v2), you have to change serializer and parametalizer.
 
 #### 1. Global level settings
 
-    ODataClient.UseV4Global();
+    ODataClient.UseHistoricalGlobal();
 
 #### 2. Client level settings
 not yet. If you want, please create issue ticket.

@@ -104,6 +104,6 @@ namespace ODataHttpClient.Serializers
             _settings = _general,
             _serializer = Newtonsoft.Json.JsonSerializer.Create(_general)
         };
-        public static IJsonSerializer Default = Historical;
+        public static IJsonSerializer Default = General;
     }
 }
