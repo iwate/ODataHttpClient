@@ -126,10 +126,10 @@ namespace ODataHttpClient
 
             return await ParseMultiAsync(multipart, request.AcceptNotFounds, response.Headers, cancellationToken);
         }
-        public static void UseV4Global()
+        public static void UseHistoricalGlobal()
         {
-            JsonSerializer.Default = JsonSerializer.General;
-            Request.Parameterizer = new ODataV4Parameterizer();
+            JsonSerializer.Default = JsonSerializer.Historical;
+            Request.Parameterizer = new ODataParameterizer();
         }
     }
 }

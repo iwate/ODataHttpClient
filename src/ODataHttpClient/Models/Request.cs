@@ -104,7 +104,7 @@ namespace ODataHttpClient.Models
             };
         }
 
-        public static IParameterizer Parameterizer { get; set; } = new ODataParameterizer();
+        public static IParameterizer Parameterizer { get; set; } = new ODataV4Parameterizer();
 
         public static Request Get(string uri, bool acceptNotFound = true) => Create(HttpMethod.Get, uri, acceptNotFound);
         public static Request Get(string uri, object @params, bool acceptNotFound = true) => Get(Parameterizer.Parameterize(uri, @params), acceptNotFound);
