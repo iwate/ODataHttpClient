@@ -140,5 +140,5 @@ var request = Request.Get("...", acceptNotFound: false);
 var response = await odata.SendAsync(request);
 ```
 
-When a response code of other HTTP method, like as POST,PUT,PATCH and DELETE, is 404, ODataHttpClient set `Response.Success` false.
+When a response code of other HTTP methods, like as POST,PUT,PATCH and DELETE, is 404, ODataHttpClient set `Response.Success` false.
 
