@@ -4,6 +4,6 @@ namespace ODataHttpClient.Models
 {
     public  interface IBatchRequest : IRequest
     {
-        bool[] NotFoundIsSuccesses { get;}
+        bool[] AcceptNotFounds { get;}
     }
 }

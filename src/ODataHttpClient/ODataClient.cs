@@ -19,8 +19,6 @@ namespace ODataHttpClient
         private static readonly NameValueHeaderValue _responseMsgType = new NameValueHeaderValue("msgtype","response");
         private readonly HttpClient _httpClient;
         private readonly ICredentialBuilder _credentialBuilder;
-        public static bool DefaultNotFoundIsSuccess = true;
-        public bool NotFoundIsSuccess { get; set; } = DefaultNotFoundIsSuccess;
         public RequestFactory RequestFactory { get; }
         public ODataClient(HttpClient httpClient)
             : this(httpClient, JsonSerializer.Default)
@@ -44,13 +42,13 @@ namespace ODataHttpClient
             RequestFactory = new RequestFactory(serializer);
         }
 
-        protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content, HttpResponseHeaders headers = null, bool notfoundIsSuccess = true)
+        protected async Task<Response> ParseAsync(HttpStatusCode status, HttpContent content, HttpResponseHeaders headers = null, bool acceptNotFound = true)
         {
             var code = (int)status;
             var body = content != null ? await content.ReadAsByteArrayAsync() : null;
             var mime = content?.Headers.ContentType?.MediaType;
 
-            if (code == 404 && notfoundIsSuccess)
+            if (code == 404 && acceptNotFound)
                 return Response.CreateSuccess(status, mime, (byte[])null, headers);
             
             if (code >= 400)
@@ -63,11 +61,12 @@ namespace ODataHttpClient
         }
 
 
-        protected async Task<IReadOnlyList<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default, bool[] notfoundIsSuccesses = null)
+        protected async Task<IReadOnlyList<Response>> ParseMultiAsync(MultipartMemoryStreamProvider multipart, bool[] acceptNotFounds, HttpResponseHeaders headers = null, CancellationToken cancellationToken = default)
         {
-            if (notfoundIsSuccesses == null) {
-                notfoundIsSuccesses = new []{NotFoundIsSuccess};
+            if (acceptNotFounds == null) {
+                throw new ArgumentNullException(nameof(acceptNotFounds));
             }
+
             var result = new List<Response>();
             foreach (var (content,i) in multipart.Contents.Select((content,i) => (content,i)))
             {
@@ -83,18 +82,18 @@ namespace ODataHttpClient
                         && content.Headers.TryGetValues("Content-ID", out var contentId))
                     {
                         part.Headers.Add("Content-ID", contentId);
-                        if (contentId.Any() && int.TryParse(contentId.First(), out var contentIdValue) && contentIdValue > 1 && contentIdValue <= notfoundIsSuccesses.Length) {
+                        if (contentId.Any() && int.TryParse(contentId.First(), out var contentIdValue) && contentIdValue > 1 && contentIdValue <= acceptNotFounds.Length) {
                             index = contentIdValue - 1;
                         }
                     }
 
-                    result.Add(await ParseAsync(part.StatusCode, part.Content, part.Headers, notfoundIsSuccesses[index]));
+                    result.Add(await ParseAsync(part.StatusCode, part.Content, part.Headers, acceptNotFounds[index]));
                 }
                 else if (content.IsMimeMultipartContent())
                 {
                     var children = await content.ReadAsMultipartAsync(cancellationToken);
 
-                    result.AddRange(await ParseMultiAsync(children, headers, cancellationToken, notfoundIsSuccesses));
+                    result.AddRange(await ParseMultiAsync(children, acceptNotFounds, headers, cancellationToken));
                 }
             }
             return result;
@@ -107,7 +106,7 @@ namespace ODataHttpClient
 
             var response = await _httpClient.SendAsync(message, cancellationToken);
 
-            return await ParseAsync(response.StatusCode, response.Content, response.Headers, request.NotFoundIsSuccess);
+            return await ParseAsync(response.StatusCode, response.Content, response.Headers, request.AcceptNotFound);
         }
         public Task<IReadOnlyList<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default)
         {
@@ -121,11 +120,11 @@ namespace ODataHttpClient
             var response = await _httpClient.SendAsync(message, cancellationToken);
 
             if (!response.Content.IsMimeMultipartContent())
-                return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers, request.NotFoundIsSuccess) };
+                return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers, request.AcceptNotFound) };
 
             var multipart = await response.Content.ReadAsMultipartAsync(cancellationToken);
 
-            return await ParseMultiAsync(multipart, response.Headers, cancellationToken, request.NotFoundIsSuccesses);
+            return await ParseMultiAsync(multipart, request.AcceptNotFounds, response.Headers, cancellationToken);
         }
         public static void UseV4Global()
         {

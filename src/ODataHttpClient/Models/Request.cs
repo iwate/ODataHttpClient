@@ -19,7 +19,7 @@ namespace ODataHttpClient.Models
         public string Uri { get; private set; }
         public string MediaType { get; private set; }
         public string Body { get; private set; }
-        public bool NotFoundIsSuccess { get; private set; }
+        public bool AcceptNotFound { get; private set; }
 
         private Request() { }
 
@@ -43,18 +43,18 @@ namespace ODataHttpClient.Models
             return message;
         }
 
-        public static Request Create(HttpMethod method, string uri, bool notfoundIsSuccess = false)
+        public static Request Create(HttpMethod method, string uri, bool acceptNotFound = false)
         {
             return new Request
             {
                 Method = method,
                 Uri = uri,
                 Body = null,
-                NotFoundIsSuccess = notfoundIsSuccess,
+                AcceptNotFound = acceptNotFound,
             };
         }
 
-        public static Request Create(HttpMethod method, string uri, IReadOnlyDictionary<string, string> headers, bool notfoundIsSuccess = false)
+        public static Request Create(HttpMethod method, string uri, IReadOnlyDictionary<string, string> headers, bool acceptNotFound = false)
         {
             return new Request
             {
@@ -62,16 +62,16 @@ namespace ODataHttpClient.Models
                 Uri = uri,
                 Body = null,
                 Headers = headers,
-                NotFoundIsSuccess = notfoundIsSuccess,
+                AcceptNotFound = acceptNotFound,
             };
         }
 
-        public static Request Create<T>(HttpMethod method, string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null, IReadOnlyDictionary<string, string> headers = null, bool notfoundIsSuccess = false)
+        public static Request Create<T>(HttpMethod method, string uri, T body, string type = null, string typeKey = DEFAULT_TYPE_KEY, IJsonSerializer serializer = null, IReadOnlyDictionary<string, string> headers = null, bool acceptNotFound = false)
         {
-            return Create(method, uri, body, type != null ? new[] { new KeyValuePair<string, object>(typeKey, type) } : null, serializer ?? JsonSerializer.Default, headers, notfoundIsSuccess);
+            return Create(method, uri, body, type != null ? new[] { new KeyValuePair<string, object>(typeKey, type) } : null, serializer ?? JsonSerializer.Default, headers, acceptNotFound);
         }
 
-        public static Request Create<T>(HttpMethod method, string uri, T body, IEnumerable<KeyValuePair<string, object>> additionals, IJsonSerializer serializer, IReadOnlyDictionary<string, string> headers = null, bool notfoundIsSuccess = false)
+        public static Request Create<T>(HttpMethod method, string uri, T body, IEnumerable<KeyValuePair<string, object>> additionals, IJsonSerializer serializer, IReadOnlyDictionary<string, string> headers = null, bool acceptNotFound = false)
         {
             string content, mime = null;
 
@@ -100,21 +100,21 @@ namespace ODataHttpClient.Models
                 MediaType = mime,
                 Body = content,
                 Headers = headers,
-                NotFoundIsSuccess = notfoundIsSuccess,
+                AcceptNotFound = acceptNotFound,
             };
         }
 
         public static IParameterizer Parameterizer { get; set; } = new ODataParameterizer();
 
-        public static Request Get(string uri, bool notfoundIsSuccess = true) => Create(HttpMethod.Get, uri, notfoundIsSuccess);
-        public static Request Get(string uri, object @params, bool notfoundIsSuccess = true) => Get(Parameterizer.Parameterize(uri, @params), notfoundIsSuccess);
-        public static Request Get(string uri, IReadOnlyDictionary<string, string> headers, bool notfoundIsSuccess = true) => Create(HttpMethod.Get, uri, headers, notfoundIsSuccess);
-        public static Request Get(string uri, object @params, IReadOnlyDictionary<string, string> headers, bool notfoundIsSuccess = true) => Get(Parameterizer.Parameterize(uri, @params), headers, notfoundIsSuccess);
+        public static Request Get(string uri, bool acceptNotFound = true) => Create(HttpMethod.Get, uri, acceptNotFound);
+        public static Request Get(string uri, object @params, bool acceptNotFound = true) => Get(Parameterizer.Parameterize(uri, @params), acceptNotFound);
+        public static Request Get(string uri, IReadOnlyDictionary<string, string> headers, bool acceptNotFound = true) => Create(HttpMethod.Get, uri, headers, acceptNotFound);
+        public static Request Get(string uri, object @params, IReadOnlyDictionary<string, string> headers, bool acceptNotFound = true) => Get(Parameterizer.Parameterize(uri, @params), headers, acceptNotFound);
 
-        public static Request Head(string uri, bool notfoundIsSuccess = true) => Create(HttpMethod.Head, uri, notfoundIsSuccess);
-        public static Request Head(string uri, object @params, bool notfoundIsSuccess = true) => Head(Parameterizer.Parameterize(uri, @params), notfoundIsSuccess);
-        public static Request Head(string uri, IReadOnlyDictionary<string, string> headers, bool notfoundIsSuccess = true) => Create(HttpMethod.Head, uri, headers, notfoundIsSuccess);
-        public static Request Head(string uri, object @params, IReadOnlyDictionary<string, string> headers, bool notfoundIsSuccess = true) => Head(Parameterizer.Parameterize(uri, @params), headers, notfoundIsSuccess);
+        public static Request Head(string uri, bool acceptNotFound = true) => Create(HttpMethod.Head, uri, acceptNotFound);
+        public static Request Head(string uri, object @params, bool acceptNotFound = true) => Head(Parameterizer.Parameterize(uri, @params), acceptNotFound);
+        public static Request Head(string uri, IReadOnlyDictionary<string, string> headers, bool acceptNotFound = true) => Create(HttpMethod.Head, uri, headers, acceptNotFound);
+        public static Request Head(string uri, object @params, IReadOnlyDictionary<string, string> headers, bool acceptNotFound = true) => Head(Parameterizer.Parameterize(uri, @params), headers, acceptNotFound);
 
         public static Request Delete(string uri) => Create(HttpMethod.Delete, uri);
         public static Request Delete(string uri, object @params) => Delete(Parameterizer.Parameterize(uri, @params));

@@ -11,8 +11,8 @@ namespace ODataHttpClient.Models
         public string Uri { get; }
         public ICollection<Request> Requests { get; set; }
         public IReadOnlyDictionary<string, string> Headers { get; private set; }
-        public bool NotFoundIsSuccess => false;
-        public bool[] NotFoundIsSuccesses => Requests.Select((req) => req.NotFoundIsSuccess).ToArray();
+        public bool AcceptNotFound => false;
+        public bool[] AcceptNotFounds => Requests.Select((req) => req.AcceptNotFound).ToArray();
         public BatchRequest(string uri)
         {
             Uri = uri;

@@ -5,6 +5,6 @@ namespace ODataHttpClient.Models
     public interface IRequest
     {
         HttpRequestMessage CreateMessage();
-        bool NotFoundIsSuccess { get; }
+        bool AcceptNotFound { get; }
     }
 }

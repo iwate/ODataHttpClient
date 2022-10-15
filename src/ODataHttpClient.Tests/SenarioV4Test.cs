@@ -176,7 +176,7 @@ namespace ODataHttpClient.Tests
         [Fact]
         public async Task FailedAtNotFoundByGetWithFlag()
         {
-            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = -1 }, notfoundIsSuccess:false));
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = -1 }, acceptNotFound:false));
 
             Assert.False(response.Success);
 
