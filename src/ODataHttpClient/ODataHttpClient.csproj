@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>ODataHttpClient</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Commerble</Authors>
+    <Authors>iwate</Authors>
     <PackageProjectUrl>https://github.com/iwate/ODataHttpClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/iwate/ODataHttpClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
