@@ -200,5 +200,41 @@ namespace ODataHttpClient.Tests
 
             Assert.Equal("$filter=Value1 eq 'email@Value2.com' and Value2 eq 123", query);
         }
+
+        [Fact]
+        public void InArrayInt()
+        {
+            var odata = new ODataV4Parameterizer();
+            var query = odata.Parameterize("$filter=Value in @Array", new { Array = new int[] { 0, 1, 2 } });
+
+            Assert.Equal("$filter=Value in (0,1,2)", query);
+        }
+
+        [Fact]
+        public void InArrayLong()
+        {
+            var odata = new ODataV4Parameterizer();
+            var query = odata.Parameterize("$filter=Value in @Array", new { Array = new long[] { 0, 1, 2 } });
+
+            Assert.Equal("$filter=Value in (0,1,2)", query);
+        }
+
+        [Fact]
+        public void InArrayString()
+        {
+            var odata = new ODataV4Parameterizer();
+            var query = odata.Parameterize("$filter=Value in @Array", new { Array = new [] { "aa", "bb", "cc" } });
+
+            Assert.Equal("$filter=Value in ('aa','bb','cc')", query);
+        }
+
+        [Fact]
+        public void InArrayGuid()
+        {
+            var odata = new ODataV4Parameterizer();
+            var query = odata.Parameterize("$filter=Value in @Array", new { Array = new [] { Guid.Parse("01234567-89ab-cdef-0123-456789abcdef") } });
+
+            Assert.Equal("$filter=Value in (01234567-89ab-cdef-0123-456789abcdef)", query);
+        }
     }
 }

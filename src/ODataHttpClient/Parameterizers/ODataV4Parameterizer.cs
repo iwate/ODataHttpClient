@@ -24,7 +24,7 @@ namespace ODataHttpClient.Parameterizers
         {
             return Regex.Replace(query, $"([^@])@{name}", "${1}" + Literal(value));
         }
-        private string Literal(object value)
+        private string Literal(object value, bool suffix = true)
         {
             if (value == null)
                 return "null";
@@ -32,29 +32,35 @@ namespace ODataHttpClient.Parameterizers
             switch (value)
             {
                 case bool val: return Literal(val);
-                case long val: return Literal(val);
-                case float val: return Literal(val);
-                case double val: return Literal(val);
-                case decimal val: return Literal(val);
+                case long val: return Literal(val, suffix);
+                case float val: return Literal(val, suffix);
+                case double val: return Literal(val, suffix);
+                case decimal val: return Literal(val, suffix);
                 case byte[] val: return Literal(val);
                 case string val: return Literal(val);
                 case Guid val: return Literal(val);
                 case TimeSpan val: return Literal(val);
                 case DateTime val: return Literal(val);
                 case DateTimeOffset val: return Literal(val);
+                case int[] val: return LiteralArray(val);
+                case long[] val: return LiteralArray(val);
+                case string[] val: return LiteralArray(val);
+                case Guid[] val: return LiteralArray(val);
                 default: return value.ToString();
             }
         }
 
+        private string LiteralArray<T>(T[] values) => $"({string.Join(",", values.Select(val => Literal(val, false)))})";
+
         private string Literal(bool value) => value ? "true" : "false";
 
-        private string Literal(long value) => $"{value}L";
+        private string Literal(long value, bool suffix) => $"{value}{(suffix?"L":string.Empty)}";
 
-        private string Literal(float value) => Invariant($"{value}f");
+        private string Literal(float value, bool suffix) => Invariant($"{value}{(suffix?"f":string.Empty)}");
 
-        private string Literal(double value) => Invariant($"{value}d");
+        private string Literal(double value, bool suffix) => Invariant($"{value}{(suffix?"d":string.Empty)}");
 
-        private string Literal(decimal value) => Invariant($"{value}M");
+        private string Literal(decimal value, bool suffix) => Invariant($"{value}{(suffix?"M":string.Empty)}");
 
         private string Literal(byte[] value) => $"binary'{String.Join("", value.Select(b => b.ToString("X2")))}'";
 
