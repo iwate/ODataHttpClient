@@ -60,7 +60,7 @@ The simplest implementation of OData client.
 
     var client = new HttpClient();
     var odata = new ODataClient(client);
-    var request = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTime(2000, 1, 1) });
+    var request = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTimeOffset(new DateTime(2000, 1, 1)) });
     var response = await odata.SendAsync(request);
 
     if (response.Success) 
@@ -112,21 +112,21 @@ And pass the builder instance to 2nd parameter constructor.
     var odata = new ODataClient(client, new CustomCredentialBuilder());
     
 ## Json Serializer Settings
-In default, ODataHttpClient use [OData V2 JSON Serialization Format](http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes).  
-If you change general json format, can select a way of three.
+In default, ODataHttpClient use general json format. 
+If you change [OData V2 JSON Serialization Format](http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes), can select a way of three.
 
 ### 1. Global level settings
 
-    ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.General;
+    ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.Historical;
 
 ### 2. Instance level settings
 
-    var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.General);
+    var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.Historical);
     var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory
 
 ### 3. Request level settings
 
-    var serializer = ODataHttpClient.Serializers.JsonSerializer.General;
+    var serializer = ODataHttpClient.Serializers.JsonSerializer.Historical;
     var request = Request.Get("...", serializer); // pass serializer
     var response = await odata.SendAsync(request);
     var data = response.ReadAs<dynamic>(serializer); // pass serializer
