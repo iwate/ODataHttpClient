@@ -115,7 +115,7 @@ namespace ODataHttpClient.Tests
             var odata = new ODataV4Parameterizer();
             var query = odata.Parameterize("$filter=Value eq @Value", new { Value = Guid.Empty });
 
-            Assert.Equal("$filter=Value eq guid'00000000-0000-0000-0000-000000000000'", query);
+            Assert.Equal("$filter=Value eq 00000000-0000-0000-0000-000000000000", query);
         }
 
         [Fact]
@@ -123,13 +123,13 @@ namespace ODataHttpClient.Tests
         {
             var odata = new ODataV4Parameterizer();
 
-            Assert.Equal("$filter=Value eq time'P30D'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromDays(30) }));
-            Assert.Equal("$filter=Value eq time'PT1H'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) }));
-            Assert.Equal("$filter=Value eq time'PT15M'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMinutes(15) }));
-            Assert.Equal("$filter=Value eq time'PT1S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromSeconds(1) }));
-            Assert.Equal("$filter=Value eq time'PT0.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(500) }));
-            Assert.Equal("$filter=Value eq time'PT1.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(1500) }));
-            Assert.Equal("$filter=Value eq time'PT0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = default(TimeSpan) }));
+            Assert.Equal("$filter=Value eq duration'P30D'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromDays(30) }));
+            Assert.Equal("$filter=Value eq duration'PT1H'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) }));
+            Assert.Equal("$filter=Value eq duration'PT15M'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMinutes(15) }));
+            Assert.Equal("$filter=Value eq duration'PT1S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromSeconds(1) }));
+            Assert.Equal("$filter=Value eq duration'PT0.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(500) }));
+            Assert.Equal("$filter=Value eq duration'PT1.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(1500) }));
+            Assert.Equal("$filter=Value eq duration'PT0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = default(TimeSpan) }));
         }
 
         [Fact]
@@ -138,13 +138,13 @@ namespace ODataHttpClient.Tests
         {
             var odata = new ODataV4Parameterizer();
 
-            Assert.Equal("$filter=Value eq time'P30D'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromDays(30) }));
-            Assert.Equal("$filter=Value eq time'PT1H'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) }));
-            Assert.Equal("$filter=Value eq time'PT15M'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMinutes(15) }));
-            Assert.Equal("$filter=Value eq time'PT1S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromSeconds(1) }));
-            Assert.Equal("$filter=Value eq time'PT0.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(500) }));
-            Assert.Equal("$filter=Value eq time'PT1.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(1500) }));
-            Assert.Equal("$filter=Value eq time'PT0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = default(TimeSpan) }));
+            Assert.Equal("$filter=Value eq duration'P30D'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromDays(30) }));
+            Assert.Equal("$filter=Value eq duration'PT1H'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromHours(1) }));
+            Assert.Equal("$filter=Value eq duration'PT15M'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMinutes(15) }));
+            Assert.Equal("$filter=Value eq duration'PT1S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromSeconds(1) }));
+            Assert.Equal("$filter=Value eq duration'PT0.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(500) }));
+            Assert.Equal("$filter=Value eq duration'PT1.5S'", odata.Parameterize("$filter=Value eq @Value", new { Value = TimeSpan.FromMilliseconds(1500) }));
+            Assert.Equal("$filter=Value eq duration'PT0S'", odata.Parameterize("$filter=Value eq @Value", new { Value = default(TimeSpan) }));
         }
 
         [Fact]

@@ -60,7 +60,7 @@ namespace ODataHttpClient.Parameterizers
 
         private string Literal(string value) => $"'{value.Replace("@", "@@")}'";
 
-        private string Literal(Guid value) => $"guid'{value}'";
+        private string Literal(Guid value) => $"{value}";
 
         private string Literal(TimeSpan value)
         {
@@ -76,7 +76,7 @@ namespace ODataHttpClient.Parameterizers
                 
 	        duration = duration == "PT" ? "PT0S" : duration[duration.Length-1] == 'T' ? duration.Substring(0,duration.Length-1) : duration;
 
-            return $"time'{duration}'";
+            return $"duration'{duration}'";
         }
 
         private string Literal(DateTime value) => $"{value:yyyy-MM-ddTHH:mm:ss.fffffff}";
