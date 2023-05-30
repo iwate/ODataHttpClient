@@ -6,9 +6,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ODataHttpClient.Models;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace ODataHttpClient.Tests
 {
+    [Order(10)]
     public class SenarioTest
     {
         const string endpoint = "https://services.odata.org/V3/(S(ni3esrvxcoxxfea2kdchzo0o))/OData/OData.svc";
@@ -16,6 +18,8 @@ namespace ODataHttpClient.Tests
         static ODataClient odata = new ODataClient(httpClient);
         public SenarioTest()
         {
+            Request.Parameterizer 
+                = new ODataHttpClient.Parameterizers.ODataParameterizer();
             ODataHttpClient.Serializers.JsonSerializer.Default 
                 = ODataHttpClient.Serializers.JsonSerializer.General;
         }
@@ -147,6 +151,69 @@ namespace ODataHttpClient.Tests
             var product = response.ReadAs<IEnumerable<dynamic>>();
 
             Assert.Null(product);
+        }
+
+        
+        [Fact]
+        public async Task SuccessAtNotFoundByGet()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = -1 }));
+
+            Assert.True(response.Success);
+
+            var product = response.ReadAs<dynamic>();
+
+            Assert.Null(product);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByGetWithFlag()
+        {
+            var response = await odata.SendAsync(Request.Get($"{endpoint}/Products(@Id)", new { Id = -1 }, false));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByPost()
+        {
+            var response = await odata.SendAsync(Request.Put($"{endpoint}/Product", new { }, new {}, type:"ODataDemo.Product"));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByPut()
+        {
+            var response = await odata.SendAsync(Request.Put($"{endpoint}/Products(@Id)", new { Id = -1 }, new {}, type:"ODataDemo.Product"));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByPatch()
+        {
+            var response = await odata.SendAsync(Request.Patch($"{endpoint}/Products(@Id)", new { Id = -1 }, new {}, type:"ODataDemo.Product"));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task FailedAtNotFoundByDelete()
+        {
+            var response = await odata.SendAsync(Request.Delete($"{endpoint}/Products(@Id)", new { Id = -1 }));
+
+            Assert.False(response.Success);
+
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

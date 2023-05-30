@@ -2,8 +2,9 @@ using System.Net.Http;
 
 namespace ODataHttpClient.Models
 {
-    public  interface IRequest
+    public interface IRequest
     {
         HttpRequestMessage CreateMessage();
+        bool AcceptNotFound { get; }
     }
 }
