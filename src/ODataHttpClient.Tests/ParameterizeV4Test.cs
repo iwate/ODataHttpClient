@@ -9,7 +9,7 @@ namespace ODataHttpClient.Tests
         [Fact]
         public void BoolParam()
         {
-            var odata = new ODataParameterizer();
+            var odata = new ODataV4Parameterizer();
             var query = odata.Parameterize("$filter=True eq @True and False eq @False", new { True = true, False = false });
 
             Assert.Equal("$filter=True eq true and False eq false", query);
@@ -19,7 +19,7 @@ namespace ODataHttpClient.Tests
         [UseCulture("de-DE")]
         public void BoolParamGeDE()
         {
-            var odata = new ODataParameterizer();
+            var odata = new ODataV4Parameterizer();
             var query = odata.Parameterize("$filter=True eq @True and False eq @False", new { True = true, False = false });
 
             Assert.Equal("$filter=True eq true and False eq false", query);
