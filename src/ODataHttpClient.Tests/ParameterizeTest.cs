@@ -170,5 +170,23 @@ namespace ODataHttpClient.Tests
 
             Assert.Equal("$filter=Value1 eq 'email@Value2.com' and Value2 eq 123", query);
         }
+
+        [Fact]
+        public void Dollar()
+        {
+            var odata = new ODataParameterizer();
+            var query = odata.Parameterize("$filter=Value1 eq @Value1", new { Value1 = "$value$" });
+
+            Assert.Equal("$filter=Value1 eq '$value$'", query);
+        }
+
+        [Fact]
+        public void Dollars()
+        {
+            var odata = new ODataParameterizer();
+            var query = odata.Parameterize("$filter=Value1 eq @Value1", new { Value1 = "$$value$$" });
+
+            Assert.Equal("$filter=Value1 eq '$$value$$'", query);
+        }
     }
 }

@@ -236,5 +236,23 @@ namespace ODataHttpClient.Tests
 
             Assert.Equal("$filter=Value in (01234567-89ab-cdef-0123-456789abcdef)", query);
         }
+
+        [Fact]
+        public void Dollar()
+        {
+            var odata = new ODataV4Parameterizer();
+            var query = odata.Parameterize("$filter=Value1 eq @Value1", new { Value1 = "$value$" });
+
+            Assert.Equal("$filter=Value1 eq '$value$'", query);
+        }
+
+        [Fact]
+        public void Dollars()
+        {
+            var odata = new ODataV4Parameterizer();
+            var query = odata.Parameterize("$filter=Value1 eq @Value1", new { Value1 = "$$value$$" });
+
+            Assert.Equal("$filter=Value1 eq '$$value$$'", query);
+        }
     }
 }

@@ -20,9 +20,12 @@ namespace ODataHttpClient.Parameterizers
             return query.Replace("@@", "@");
         }
 
+        private string DollarEscape(string value) {
+            return value?.Replace("$", "$$");
+        }
         private string Replace(string query, string name, object value)
         {
-            return Regex.Replace(query, $"([^@])@{name}", "${1}" + Literal(value));
+            return Regex.Replace(query, $"([^@])@{name}", "${1}" + DollarEscape(Literal(value)));
         }
         private string Literal(object value, bool suffix = true)
         {
