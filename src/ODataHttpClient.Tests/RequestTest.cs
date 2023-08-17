@@ -209,7 +209,7 @@ namespace ODataHttpClient.Tests
 			var body = "text";
 			var request = new RequestFactory()
 				.Create(HttpMethod.Get, uri,
-					body, headers, null);
+					body, headers:headers);
 			Assert.Equal(HttpMethod.Get, request.Method);
 			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
