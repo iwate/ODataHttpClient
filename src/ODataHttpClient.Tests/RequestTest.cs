@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using ODataHttpClient.Models;
 using Xunit;
 
@@ -45,51 +46,51 @@ namespace ODataHttpClient.Tests
             Assert.True(message.Content.Headers.ContentType.MediaType == "application/json");
         }
         [Fact]
-        public void ContentTypePlainText()
+        public async Task ContentTypePlainText()
         {
             var message = Request.Create(HttpMethod.Post, uri, "Hello, World!").CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("Hello, World!", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("Hello, World!", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 100).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("100", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("100", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 1.23f).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("1.23", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 1.23d).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("1.23", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 1.23m).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("1.23", await message.Content.ReadAsStringAsync());
         }
         [Fact]
         [UseCulture("it-IT")]
-        public void ContentTypePlainTextItIT()
+        public async Task ContentTypePlainTextItIT()
         {
             var message = Request.Create(HttpMethod.Post, uri, "Hello, World!").CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("Hello, World!", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("Hello, World!", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 100).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("100", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("100", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 1.23f).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("1.23", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 1.23d).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("1.23", await message.Content.ReadAsStringAsync());
 
             message = Request.Create(HttpMethod.Post, uri, 1.23m).CreateMessage();
             Assert.Equal("text/plain", message.Content.Headers.ContentType.MediaType);
-            Assert.Equal("1.23", message.Content.ReadAsStringAsync().Result);
+            Assert.Equal("1.23", await message.Content.ReadAsStringAsync());
         }
         [Fact]
         public void CreateGetRequest()
@@ -170,7 +171,7 @@ namespace ODataHttpClient.Tests
 			Assert.True(((Request)request).Headers.ContainsKey(headerKey));
 		}
 		[Fact]
-        public void BatchRequest()
+        public async Task BatchRequest()
         {
             var message = new BatchRequest(batchUri)
             {
@@ -190,12 +191,12 @@ namespace ODataHttpClient.Tests
             Assert.Equal("snapshot", message.Headers.GetValues("Isolation").First());
             Assert.Equal("odata.continue-on-error", message.Headers.GetValues("Prefer").First());
 
-            var multipart1 = message.Content.ReadAsMultipartAsync().Result;
+            var multipart1 = await message.Content.ReadAsMultipartAsync();
 
             Assert.Single(multipart1.Contents);
             Assert.True(multipart1.Contents.First().IsMimeMultipartContent());
             
-            var multipart2 = multipart1.Contents.First().ReadAsMultipartAsync().Result;
+            var multipart2 = await multipart1.Contents.First().ReadAsMultipartAsync();
             
             Assert.Equal(2, multipart2.Contents.Count);
 
@@ -204,8 +205,8 @@ namespace ODataHttpClient.Tests
             Assert.True(multipart2.Contents[0].IsHttpRequestMessageContent());
             Assert.True(multipart2.Contents[1].IsHttpRequestMessageContent());
 
-            var req1 = multipart2.Contents[0].ReadAsHttpRequestMessageAsync().Result;
-            var req2 = multipart2.Contents[1].ReadAsHttpRequestMessageAsync().Result;
+            var req1 = await multipart2.Contents[0].ReadAsHttpRequestMessageAsync();
+            var req2 = await multipart2.Contents[1].ReadAsHttpRequestMessageAsync();
 
             Assert.Equal("1", req1.Headers.GetValues("Content-ID")?.FirstOrDefault());
             Assert.Equal("2", req2.Headers.GetValues("Content-ID")?.FirstOrDefault());
