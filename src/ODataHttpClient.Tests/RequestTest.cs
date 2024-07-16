@@ -178,10 +178,17 @@ namespace ODataHttpClient.Tests
                 {
                     Request.Post(uri, new {}),
                     Request.Post(uri, new {})
+                },
+                Headers = new Dictionary<string, string> {
+                    ["Isolation"] = "snapshot",
+                    ["Prefer"] = "odata.continue-on-error",
                 }
             }.CreateMessage();
 
             Assert.True(message.Content.IsMimeMultipartContent());
+
+            Assert.Equal("snapshot", message.Headers.GetValues("Isolation").First());
+            Assert.Equal("odata.continue-on-error", message.Headers.GetValues("Prefer").First());
 
             var multipart1 = message.Content.ReadAsMultipartAsync().Result;
 

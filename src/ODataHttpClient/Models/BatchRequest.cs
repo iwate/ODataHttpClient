@@ -10,7 +10,7 @@ namespace ODataHttpClient.Models
     {
         public string Uri { get; }
         public ICollection<Request> Requests { get; set; }
-        public IReadOnlyDictionary<string, string> Headers { get; private set; }
+        public IReadOnlyDictionary<string, string> Headers { get; set; }
         public bool AcceptNotFound => false;
         public bool[] AcceptNotFounds => Requests.Select((req) => req.AcceptNotFound).ToArray();
         public BatchRequest(string uri)
