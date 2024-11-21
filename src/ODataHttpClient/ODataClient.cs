@@ -104,9 +104,10 @@ namespace ODataHttpClient
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
 
-            var response = await _httpClient.SendAsync(message, cancellationToken);
-
-            return await ParseAsync(response.StatusCode, response.Content, response.Headers, request.AcceptNotFound);
+            using (var response = await _httpClient.SendAsync(message, cancellationToken))
+            {
+                return await ParseAsync(response.StatusCode, response.Content, response.Headers, request.AcceptNotFound);
+            }
         }
         public Task<IReadOnlyList<Response>> SendAsync(IBatchRequest batchRequest, CancellationToken cancellationToken = default)
         {
@@ -117,14 +118,15 @@ namespace ODataHttpClient
             var message = request.CreateMessage();
             _credentialBuilder?.Build(_httpClient, message);
 
-            var response = await _httpClient.SendAsync(message, cancellationToken);
+            using (var response = await _httpClient.SendAsync(message, cancellationToken))
+            {
+                if (!response.Content.IsMimeMultipartContent())
+                    return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers, request.AcceptNotFound) };
 
-            if (!response.Content.IsMimeMultipartContent())
-                return new[] { await ParseAsync(response.StatusCode, response.Content, response.Headers, request.AcceptNotFound) };
+                var multipart = await response.Content.ReadAsMultipartAsync(cancellationToken);
 
-            var multipart = await response.Content.ReadAsMultipartAsync(cancellationToken);
-
-            return await ParseMultiAsync(multipart, request.AcceptNotFounds, response.Headers, cancellationToken);
+                return await ParseMultiAsync(multipart, request.AcceptNotFounds, response.Headers, cancellationToken);
+            }
         }
         public static void UseHistoricalGlobal()
         {
