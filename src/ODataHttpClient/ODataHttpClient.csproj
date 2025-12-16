@@ -18,12 +18,12 @@
 ``` 
 var client = new HttpClient();
 var odata = new ODataClient(client);
-var request = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
+var request = Request.Get($"{endpoint}/Products?$count=true");
 var response = await odata.SendAsync(request);
 
 if (response.Success) 
 {
-    var total = response.ReadAs&lt;int&gt;("$['odata.count']");
+    var total = response.ReadAs&lt;int&gt;("$['@odata.count']");
     var products = response.ReadAs&lt;IEnumerable&lt;Product&gt;&gt;("$.value");
 }
 ```

@@ -54,7 +54,7 @@ PS&gt; Install-Package  ODataHttpClient
 
 <pre><code>var client = new HttpClient();
 var odata = new ODataClient(client);
-var reqest = Request.Get($"{endpoint}/Products?$inlinecount=allpages");
+var request = Request.Get($"{endpoint}/Products?$count=true");
 var response = await odata.SendAsync(request);
 
 if (response.Success) 
