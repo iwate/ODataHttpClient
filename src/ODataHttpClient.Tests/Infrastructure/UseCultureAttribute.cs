@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
-using Xunit.Sdk;
+using Xunit.v3;
 
 namespace ODataHttpClient.Tests
 {
@@ -63,7 +63,8 @@ namespace ODataHttpClient.Tests
         /// and replaces them with the new cultures defined in the constructor.
         /// </summary>
         /// <param name="methodUnderTest">The method under test</param>
-        public override void Before(MethodInfo methodUnderTest)
+        /// <param name="test">The test</param>
+        public override void Before(MethodInfo methodUnderTest, IXunitTest test)
         {
             originalCulture = Thread.CurrentThread.CurrentCulture;
             originalUICulture = Thread.CurrentThread.CurrentUICulture;
@@ -80,7 +81,8 @@ namespace ODataHttpClient.Tests
         /// <see cref="CultureInfo.CurrentUICulture" /> to <see cref="Thread.CurrentPrincipal" />
         /// </summary>
         /// <param name="methodUnderTest">The method under test</param>
-        public override void After(MethodInfo methodUnderTest)
+        /// <param name="test">The test</param>
+        public override void After(MethodInfo methodUnderTest, IXunitTest test)
         {
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;

@@ -6,11 +6,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using ODataHttpClient.Models;
 using Xunit;
-using Xunit.Extensions.Ordering;
 
 namespace ODataHttpClient.Tests
 {
-    [Order(10)]
+    [TestCaseOrderer(typeof(DefinitionOrderer))]
+    [TestOrder(10)]
     public class SenarioTest
     {
         const string endpoint = "https://services.odata.org/V3/(S(ni3esrvxcoxxfea2kdchzo0o))/OData/OData.svc";
