@@ -10,49 +10,57 @@
     <meta property="og:description" content="The simplest implementation of OData client.">
     <meta name="description" content="The simplest implementation from of OData client.">
     <meta name="twitter:card" content="summary" />
-    <title>ODataHttpClient</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-light.min.css">
-    <link rel="stylesheet" href="./markdown.css">
-    <style>
-        main {
-            max-width: 70rem;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        .markdown pre {
-            background: rgb(253, 246, 227);
-            padding-top: 1em;
-            padding-bottom: 1em;
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/cs.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <title>ODataHttpClient - The simplest OData client</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script>hljs.highlightAll();</script>
 </head>
 <body>
-    <main class="markdown">
-<h1>ODataHttpClient</h1>
-<p>The simplest implementation of OData client.</p>
-<p><a href="https://github.com/iwate/ODataHttpClient">View repository</a></p>
-<h2 id="install">Install</h2>
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">ODataHttpClient</a>
+            <a href="https://github.com/iwate/ODataHttpClient" class="github-link">
+                <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+                GitHub
+            </a>
+        </div>
+    </header>
 
-<pre><code>$ dotnet add package ODataHttpClient
-PS&gt; Install-Package  ODataHttpClient
-</code></pre>
+    <div class="hero">
+        <div class="container">
+            <h1>ODataHttpClient</h1>
+            <p>The simplest implementation of OData client for .NET.</p>
+            <div class="hero-actions">
+                <a href="#install" class="btn btn-primary">Get Started</a>
+                <a href="https://github.com/iwate/ODataHttpClient" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </div>
+    </div>
 
-<h2 id="restrictions">Restrictions</h2>
+    <main class="container">
+        <section id="install">
+            <h2>Install</h2>
+            <pre><code class="language-bash">$ dotnet add package ODataHttpClient
+PS> Install-Package ODataHttpClient</code></pre>
+        </section>
 
-<ul>
-<li>Not support XML (JSON only)</li>
+        <section id="restrictions">
+            <h2>Restrictions</h2>
+            <ul>
+                <li>Not support XML (JSON only)</li>
+                <li>Not support Query Builder</li>
+            </ul>
+        </section>
 
-<li>Not support Query Builder</li>
-</ul>
+        <section id="usage">
+            <h2>Usage</h2>
 
-<h2 id="usage">Usage</h2>
-
-<h3 id="simplerequest">Simple Request</h3>
-
-<pre><code>var client = new HttpClient();
+            <h3 id="simplerequest">Simple Request</h3>
+            <pre><code class="language-csharp">var client = new HttpClient();
 var odata = new ODataClient(client);
 var request = Request.Get($"{endpoint}/Products?$count=true");
 var response = await odata.SendAsync(request);
@@ -61,12 +69,10 @@ if (response.Success)
 {
     var total = response.ReadAs&lt;int&gt;("$['odata.count']");
     var products = response.ReadAs&lt;IEnumerable&lt;Product&gt;&gt;("$.value");
-}
-</code></pre>
+}</code></pre>
 
-<h3 id="batchrequest">Batch Request</h3>
-
-<pre><code>var client = new HttpClient();
+            <h3 id="batchrequest">Batch Request</h3>
+            <pre><code class="language-csharp">var client = new HttpClient();
 var odata = new ODataClient(client);
 var batch = new BatchRequest($"{endpoint}/$batch")
 {
@@ -87,15 +93,13 @@ var responses = await odata.SendAsync(batch);
 // You can also use BatchAsync. 
 // var responses = await odata.BatchAsync(batch);
 
-if (responses.All(res =&gt; res.Success)) 
+if (responses.All(res => res.Success)) 
 {
     var id = response.First().ReadAs&lt;int&gt;("$.Id");
-}
-</code></pre>
+}</code></pre>
 
-<h3 id="parameterizeduri">Parameterized Uri</h3>
-
-<pre><code>var client = new HttpClient();
+            <h3 id="parameterizeduri">Parameterized Uri</h3>
+            <pre><code class="language-csharp">var client = new HttpClient();
 var odata = new ODataClient(client);
 var reqest = Request.Get($"{endpoint}/Products?$filter=ReleaseDate ge @Date", new { Date = new DateTime(2000, 1, 1) });
 var response = await odata.SendAsync(request);
@@ -103,72 +107,62 @@ var response = await odata.SendAsync(request);
 if (response.Success) 
 {
     ...
-}
-</code></pre>
-<p>And you can use <code>@@</code> as escape for <code>@</code>.</p>
+}</code></pre>
+            <p>And you can use <code>@@</code> as escape for <code>@</code>.</p>
 
-<h3 id="setodataelementtype">Set OData Element Type</h3>
+            <h3 id="setodataelementtype">Set OData Element Type</h3>
+            <p>In default, OData element type is not contained in payload. If you want add element type, you should use <code>type</code> parameter of Request factory method.</p>
+            <pre><code class="language-csharp">Request.Post("...", payload, type: "ODataDemo.Product")</code></pre>
 
-<p>In default, OData element type is not contained in payload. If you want add element type, you sould use <code>type</code> parameter of Request factory method.</p>
+            <h3 id="changeodataelementtypekey">Change OData Element Type Key</h3>
+            <p>In default, OData element type key is <code>odata.type</code>. If you want change key to other, you should use <code>typeKey</code> parameter of Request factory method.</p>
+            <pre><code class="language-csharp">Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")</code></pre>
+        </section>
 
-<pre><code>Request.Post("...", payload, type: "ODataDemo.Product")
-</code></pre>
+        <section id="credential">
+            <h2>Credential</h2>
 
-<h3 id="changeodataelementtypekey">Change OData Element Type Key</h3>
+            <h3 id="basicauth">Basic Auth</h3>
+            <pre><code class="language-csharp">var odata = new ODataClient(client, "username", "password");</code></pre>
 
-<p>In default, OData element type key is <code>odata.type</code>. If you want change key to other, you should use <code>typeKey</code> parameter of Request factory method.</p>
-
-<pre><code>Request.Post("...", payload, type: "ODataDemo.Product", typeKey: "@odata.type")
-</code></pre>
-
-<h2 id="credential">Credential</h2>
-
-<h3 id="basicauth">Basic Auth</h3>
-
-<pre><code>var odata = new ODataClient(client, "username", "password");
-</code></pre>
-
-<h3 id="custom">Custom</h3>
-
-<p>You should modify default settings of client which be passed to ODataClient constructor or implemet <code>ICredentialBuilder</code></p>
-
-<pre><code>public class CustomCredentialBuilder : ODataHttpClient.Credentials.ICredentialBuilder
+            <h3 id="custom">Custom</h3>
+            <p>You should modify default settings of client which be passed to ODataClient constructor or implement <code>ICredentialBuilder</code></p>
+            <pre><code class="language-csharp">public class CustomCredentialBuilder : ODataHttpClient.Credentials.ICredentialBuilder
 {
     public void Build(HttpClient client, HttpRequestMessage message)
     {
         // implement custom credential logic.
     }
-}
-</code></pre>
+}</code></pre>
+            <p>And pass the builder instance to 2nd parameter constructor.</p>
+            <pre><code class="language-csharp">var odata = new ODataClient(client, new CustomCredentialBuilder());</code></pre>
+        </section>
 
-<p>And pass the builder instance to 2nd parameter constructor.</p>
+        <section id="jsonserializersettings">
+            <h2>Json Serializer Settings</h2>
+            <p>In default, ODataHttpClient use <a href="http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes">OData V2 JSON Serialization Format</a>.<br />
+            If you change general json format, can select a way of three.</p>
 
-<pre><code>var odata = new ODataClient(client, new CustomCredentialBuilder());
-</code></pre>
+            <h3 id="1globallevelsettings">1. Global level settings</h3>
+            <pre><code class="language-csharp">ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.General;</code></pre>
 
-<h2 id="jsonserializersettings">Json Serializer Settings</h2>
+            <h3 id="2instancelevelsettings">2. Instance level settings</h3>
+            <pre><code class="language-csharp">var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.General);
+var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory</code></pre>
 
-<p>In default, ODataHttpClient use <a href="http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes">OData V2 JSON Serialization Format</a>. <br />
-If you change general json format, can select a way of three.</p>
-
-<h3 id="1globallevelsettings">1. Global level settings</h3>
-
-<pre><code>ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.General;
-</code></pre>
-
-<h3 id="2instancelevelsettings">2. Instance level settings</h3>
-
-<pre><code>var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.General);
-var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory
-</code></pre>
-
-<h3 id="3requestlevelsettings">3. Request level settings</h3>
-
-<pre><code>var serializer = ODataHttpClient.Serializers.JsonSerializer.General;
+            <h3 id="3requestlevelsettings">3. Request level settings</h3>
+            <pre><code class="language-csharp">var serializer = ODataHttpClient.Serializers.JsonSerializer.General;
 var request = Request.Get("...", serializer); // pass serializer
 var response = await odata.SendAsync(request);
 var data = response.ReadAs&lt;dynamic&gt;(serializer); // pass serializer
 </code></pre>
+        </section>
     </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ODataHttpClient. Released under the MIT License.</p>
+        </div>
+    </footer>
 </body>
 </html>
