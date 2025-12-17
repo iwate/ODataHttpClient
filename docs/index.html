@@ -140,22 +140,28 @@ if (response.Success)
 
         <section id="jsonserializersettings">
             <h2>Json Serializer Settings</h2>
-            <p>In default, ODataHttpClient use <a href="http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes">OData V2 JSON Serialization Format</a>.<br />
-            If you change general json format, can select a way of three.</p>
+            <p>In default, ODataHttpClient use general json format. If you change <a href="http://www.odata.org/documentation/odata-version-2-0/json-format/#PrimitiveTypes">OData V2 JSON Serialization Format</a>, can select a way of three.</p>
 
             <h3 id="1globallevelsettings">1. Global level settings</h3>
-            <pre><code class="language-csharp">ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.General;</code></pre>
+            <pre><code class="language-csharp">ODataHttpClient.Serializers.JsonSerializer.Default = ODataHttpClient.Serializers.JsonSerializer.Historical;</code></pre>
 
             <h3 id="2instancelevelsettings">2. Instance level settings</h3>
-            <pre><code class="language-csharp">var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.General);
+            <pre><code class="language-csharp">var odata = new ODataHttpClient(httpClient, ODataHttpClient.Serializers.JsonSerializer.Historical);
 var request = odata.RequestFacotry.Get("..."); // MUST use RequestFactory</code></pre>
 
             <h3 id="3requestlevelsettings">3. Request level settings</h3>
-            <pre><code class="language-csharp">var serializer = ODataHttpClient.Serializers.JsonSerializer.General;
+            <pre><code class="language-csharp">var serializer = ODataHttpClient.Serializers.JsonSerializer.Historical;
 var request = Request.Get("...", serializer); // pass serializer
 var response = await odata.SendAsync(request);
 var data = response.ReadAs&lt;dynamic&gt;(serializer); // pass serializer
 </code></pre>
+        </section>
+        <section id="notfound404">
+            <h2>NotFound(404)</h2>
+            <p>In default, ODataHttpClient decide 404 response code of GET and HEAD request to success. If you change to error, can select a way of followings.</p>
+            <pre><code class="language-csharp">var request = Request.Get("...", acceptNotFound: false);
+var response = await odata.SendAsync(request);</code></pre>
+            <p>When a response code of other HTTP methods, like as POST,PUT,PATCH and DELETE, is 404, ODataHttpClient set <code>Response.Success</code> false.</p>
         </section>
     </main>
 
